@@ -2,7 +2,7 @@
 
  AutoIt Version: 3.3.14.5
  Author: @glyph
- Version 0.1
+ Version 0.2
  Script Function:
 	Opens WTC miner, starts mining, logs, closes on 1h loop.
 
@@ -24,7 +24,8 @@ If $hFileOpen = -1 Then
    MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file. Make sure you're able to open a new file @ C:\Walton-GPU-64.")
    Return False
    EndIf
-;FileClose($hFileOpen)
+FileClose($hFileOpen)
+
 While 1
 $ming = Run("C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe")
 Sleep(500)
@@ -46,9 +47,9 @@ Sleep(100)
 Send("s")
 Sleep(20)
 Send("{ENTER}")
-;FileOpen($hFileOpen, $FO_APPEND)
+$hFileOpen = FileOpen($logFilePath, $FO_APPEND)
 FileWrite($hFileOpen, _ClipBoard_GetData())
-;FileClose($hFileOpen)
+FileClose($hFileOpen)
 ProcessClose("walton.exe")
 ProcessClose($walton)
 ProcessClose($ming)
