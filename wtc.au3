@@ -34,18 +34,64 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 #include <WinAPIFiles.au3>
 #include <MsgBoxConstants.au3>
 #include <_SingleScript.au3>
+#include <Misc.au3>
 
 _SingleScript() ;prevents more than one instance from running.
 
 Global Const $logFilePath = "C:\Walton-GPU-64\log.txt"
+
+Global $loopSizeInMins = 1
 Global $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
+Global $pressed = 0
+Global $hTimer = 0
 
 If $hFileOpen = -1 Then
    MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file. Make sure you're able to open a new file @ C:\Walton-GPU-64.")
    Return False
    EndIf
 FileClose($hFileOpen)
+Func clipToFile()
 
+   WinWaitActive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat")
+   Send("!{SPACE}")
+   Sleep(100)
+   Send("e")
+   Sleep(100)
+   Send("s")
+   Sleep(20)
+   Send("{ENTER}")
+   $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
+   FileWrite($hFileOpen, _NowDate() & " " & _nowTime() & @CRLF)
+   FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
+   FileWrite($hFileOpen, _nowDate() & " " & _nowTime() & @CRLF)
+   FileClose($hfileOpen)
+   Sleep(2000)
+   ProcessClose("walton.exe")
+   ProcessClose($consoleHost)
+   ProcessClose($ming)
+   Sleep(500)
+
+EndFunc
+Func timedEscape()
+   $pressed = 0
+   $hTimer = TimerInit()
+   While (TimerDiff($hTimer) < ($loopSizeInMins * 60000))
+	   If _IsPressed("91") Then ;is scroll lock pressed
+		   If Not $pressed Then
+			   ToolTip("Scroll Lock Behind Held Down, Shutting Down")
+			   $pressed = 1
+			   clipToFile()
+			   Exit(0)
+		   EndIf
+	   Else
+		   If $pressed Then
+			   ToolTip("")
+			   $pressed = 0
+		   EndIf
+	   EndIf
+	   Sleep(250)
+	WEnd
+EndFunc
 While 1
 $ming = Run("C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe")
 Sleep(500)
@@ -53,26 +99,11 @@ $consoleHost = Run('cmd /K "cd C:\Walton-GPU-64\"')
 WinWaitActive("")
 Send("start_gpu.bat")
 Send("{ENTER}")
-Sleep(1000)
+Sleep(3000)
+WinWaitActive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat")
 Send("miner.start()")
 Send("{ENTER}")
-Sleep(3600000)
-WinActivate("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat")
-Send("!{SPACE}")
-Sleep(100)
-Send("e")
-Sleep(100)
-Send("s")
-Sleep(20)
-Send("{ENTER}")
-$hFileOpen = FileOpen($logFilePath, $FO_APPEND)
-FileWrite($hFileOpen, _NowDate() & " " & _nowTime() & @CRLF)
-FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
-FileWrite($hFileOpen, _nowDate() & " " & _nowTime() & @CRLF)
-FileClose($hfileOpen)
-ProcessClose("walton.exe")
-ProcessClose($consoleHost)
-ProcessClose($ming)
-Sleep(500)
+timedEscape()
+clipToFile()
 WEnd
 
