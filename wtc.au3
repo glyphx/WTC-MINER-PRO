@@ -15,8 +15,10 @@
 #include <FileConstants.au3>
 #include <WinAPIFiles.au3>
 #include <MsgBoxConstants.au3>
+#include <_SingleScript.au3>
 
-Global $cmd = ""
+_SingleScript() ;prevents more than one instance from running.
+
 Global Const $logFilePath = "C:\Walton-GPU-64\log.txt"
 Global $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
 
@@ -29,10 +31,8 @@ FileClose($hFileOpen)
 While 1
 $ming = Run("C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe")
 Sleep(500)
-$walton = Run("cmd.exe")
+$consoleHost = Run('cmd /K "cd C:\Walton-GPU-64\"')
 WinWaitActive("")
-Send("cd C:\Walton-GPU-64\")
-Send("{ENTER}")
 Send("start_gpu.bat")
 Send("{ENTER}")
 Sleep(1000)
@@ -48,10 +48,12 @@ Send("s")
 Sleep(20)
 Send("{ENTER}")
 $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
-FileWrite($hFileOpen, _ClipBoard_GetData())
-FileClose($hFileOpen)
+FileWrite($hFileOpen, _NowDate() & " " & _nowTime() & @CRLF)
+FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
+FileWrite($hFileOpen, _nowDate() & " " & _nowTime() & @CRLF)
+FileClose($hfileOpen)
 ProcessClose("walton.exe")
-ProcessClose($walton)
+ProcessClose($consoleHost)
 ProcessClose($ming)
 Sleep(500)
 WEnd
