@@ -40,7 +40,7 @@ _SingleScript() ;prevents more than one instance from running.
 
 Global Const $logFilePath = "C:\Walton-GPU-64\log.txt"
 
-Global $loopSizeInMins = 1
+Global $loopSizeInMins = 30
 Global $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
