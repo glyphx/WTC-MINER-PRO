@@ -40,7 +40,7 @@ _SingleScript() ;prevents more than one instance from running.
 
 Global Const $logFilePath = "C:\Walton-GPU-64\log.txt"
 
-Global $loopSizeInMins = 30
+Global $loopSizeInMins = 10
 Global $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
@@ -51,15 +51,32 @@ If $hFileOpen = -1 Then
    EndIf
 FileClose($hFileOpen)
 Func clipToFile()
+   $count = 0
+   While $count < 50
+       $count = $count + 1
+       WinActivate("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat")
+       If WinActive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+		  Send("!{SPACE}")
+		  Sleep(100)
+	      If WinActive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+		     Send("e")
+             Sleep(100)
+			 If WinActive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+				Send("s")
+				Sleep(100)
+				Send("{ENTER}")
+				ExitLoop(1)
+			 Else
+				Sleep(150)
+			 EndIf
+		  Else
+			Sleep(150)
+		 EndIf
+	  Else
+		 Sleep(150)
+	  EndIf
+   WEnd
 
-   WinWaitActive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat")
-   Send("!{SPACE}")
-   Sleep(100)
-   Send("e")
-   Sleep(100)
-   Send("s")
-   Sleep(20)
-   Send("{ENTER}")
    $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
    FileWrite($hFileOpen, _NowDate() & " " & _nowTime() & @CRLF)
    FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
@@ -93,17 +110,33 @@ Func timedEscape()
 	WEnd
 EndFunc
 While 1
-$ming = Run("C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe")
-Sleep(500)
-$consoleHost = Run('cmd /K "cd C:\Walton-GPU-64\"')
-WinWaitActive("")
-Send("start_gpu.bat")
-Send("{ENTER}")
-Sleep(3000)
-WinWaitActive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat")
-Send("miner.start()")
-Send("{ENTER}")
-timedEscape()
-clipToFile()
+   $ming = Run("C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe")
+   Sleep(500)
+   $consoleHost = Run('cmd /K "cd C:\Walton-GPU-64\"') ;creates cmd.exe handle, either create .bat or use pid
+   $count = 0
+   While $count < 50
+       WinActivate("C:\WINDOWS\SYSTEM32\cmd.exe")
+	   If WinActivate("C:\WINDOWS\SYSTEM32\cmd.exe") <> 0 Then
+		  Send("start_gpu.bat") ;can you send enter in one line?
+		  Send("{ENTER}")
+		  Sleep(750)
+		  If Winactive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+		     ExitLoop(1)
+		  EndIf
+	   EndIf
+	Wend
+
+   $count = 0
+   While $count < 50
+	  $count = $count + 1
+	   WinActivate("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat")
+	   If Winactive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+		  Send("miner.start()")
+		  Send("{ENTER}")
+		  ExitLoop(1)
+	   EndIf
+	  WEnd
+   timedEscape()
+   clipToFile()
 WEnd
 
