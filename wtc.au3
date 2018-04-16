@@ -2,9 +2,16 @@
 
  AutoIt Version: 3.3.14.5
  Author: @glyph
- Version 0.2
+ Version 0.3
+
+ Version 0.4 Goals:
+ Input goes directly to shells
+ Remove all ambiguity from windows like cmd.Exe
+
+
  Script Function:
-	Opens WTC miner, starts mining, logs, closes on 1h loop.
+	Opens WTC miner, starts mining, logs, and closes on a variable loop.
+	Press and Hold Scroll Lock for ~3s and release to quit and log.
 
 MIT LICENSE
 Copyright 2018 glyphx
@@ -37,6 +44,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 #include <Misc.au3>
 
 _SingleScript() ;prevents more than one instance from running.
+
+;you're an idiot, you should send the input to the stdin directly
 
 Global Const $logFilePath = "C:\Walton-GPU-64\log.txt"
 
