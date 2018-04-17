@@ -7,6 +7,10 @@
  Version 0.4 Goals:
  Input goes directly to shells
  Remove all ambiguity from windows like cmd.Exe
+ code check for Windows / WINDOWS problem
+ try shell execute, track all pids, convert to handle if needed.
+ try sticking to one console host window and restarting proceses, ming too if needed
+ clear the copy buffer every time and make sure there is something there before writing the next Time
 
 
  Script Function:
@@ -14,7 +18,7 @@
 	Press and Hold Scroll Lock for ~3s and release to quit and log.
 
 MIT LICENSE
-Copyright 2018 glyphx
+Copyleft 2018 glyphx, all unicorns reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this
 software and associated documentation files (the "Software"),to deal in the
@@ -42,17 +46,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 #include <MsgBoxConstants.au3>
 #include <_SingleScript.au3>
 #include <Misc.au3>
+#include <Array.au3>
 
 _SingleScript() ;prevents more than one instance from running.
 
-;you're an idiot, you should send the input to the stdin directly
+
 
 Global Const $logFilePath = "C:\Walton-GPU-64\log.txt"
-
-Global $loopSizeInMins = 10
+Global $loopSizeInMins = 1 ;change the time of the main loop here.
 Global $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
+Global $consoleHost = 0
+Global $consoleHandle = 0
+Global $winTitle = "C:\Walton-GPU-64"
 
 If $hFileOpen = -1 Then
    MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file. Make sure you're able to open a new file @ C:\Walton-GPU-64.")
@@ -63,16 +70,13 @@ Func clipToFile()
    $count = 0
    While $count < 50
        $count = $count + 1
-       WinActivate("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat")
-       If WinActive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+       WinActivate("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat")
+       If WinActive("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
 		  Send("!{SPACE}")
-		  Sleep(100)
-	      If WinActive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+	      If WinActive("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
 		     Send("e")
-             Sleep(100)
-			 If WinActive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+			 If WinActive("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
 				Send("s")
-				Sleep(100)
 				Send("{ENTER}")
 				ExitLoop(1)
 			 Else
@@ -93,10 +97,16 @@ Func clipToFile()
    FileClose($hfileOpen)
    Sleep(2000)
    ProcessClose("walton.exe")
+   Sleep(100)
    ProcessClose($consoleHost)
-   ProcessClose($ming)
-   Sleep(500)
-
+   Sleep(100)
+   $count = 3
+   while ProcessExists($ming) & $count > 0
+	  $count = $count - 1
+	  sleep(1000)
+	  Processclose($ming)
+   WEnd
+   Sleep(100)
 EndFunc
 Func timedEscape()
    $pressed = 0
@@ -117,19 +127,37 @@ Func timedEscape()
 	   EndIf
 	   Sleep(250)
 	WEnd
-EndFunc
+ EndFunc
+
+; Returns an array of all Windows associated with a given process
+Func WinHandFromPID($pid, $winTitle = "", $timeout = 8)
+    Local $secs = TimerInit()
+    Do
+        $wins = WinList($winTitle)
+        For $i = UBound($wins) - 1 To 1 Step -1
+            If (WinGetProcess($wins[$i][1]) <> $pid) Or (BitAND(WinGetState($wins[$i][1]), 2) = 0) Then _ArrayDelete($wins, $i)
+        Next
+        $wins[0][0] = UBound($wins) - 1
+        If $wins[0][0] Then Return SetError(0, 0, $wins)
+        Sleep(1000)
+    Until TimerDiff($secs) >= $timeout * 1000
+    Return SetError(1, 0, $wins)
+ EndFunc   ;==>WinHandFromPID
+
 While 1
    $ming = Run("C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe")
    Sleep(500)
    $consoleHost = Run('cmd /K "cd C:\Walton-GPU-64\"') ;creates cmd.exe handle, either create .bat or use pid
+   ;$consoleHandle = WinHandFromPID($consoleHost, $winTitle = "C:\Walton-GPU-64", $timeout = 8)
    $count = 0
    While $count < 50
-       WinActivate("C:\WINDOWS\SYSTEM32\cmd.exe")
-	   If WinActivate("C:\WINDOWS\SYSTEM32\cmd.exe") <> 0 Then
-		  Send("start_gpu.bat") ;can you send enter in one line?
+	  $count = $count + 1
+       WinActivate("C:\Windows\SYSTEM32\cmd.exe")
+	   If WinActivate("C:\Windows\SYSTEM32\cmd.exe") <> 0 Then
+		  Send("start_gpu.bat")
 		  Send("{ENTER}")
 		  Sleep(750)
-		  If Winactive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+		  If Winactive("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
 		     ExitLoop(1)
 		  EndIf
 	   EndIf
@@ -138,8 +166,8 @@ While 1
    $count = 0
    While $count < 50
 	  $count = $count + 1
-	   WinActivate("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat")
-	   If Winactive("C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+	   WinActivate("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat")
+	   If Winactive("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
 		  Send("miner.start()")
 		  Send("{ENTER}")
 		  ExitLoop(1)
@@ -148,4 +176,3 @@ While 1
    timedEscape()
    clipToFile()
 WEnd
-
