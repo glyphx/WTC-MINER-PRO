@@ -55,8 +55,8 @@ Global Const $LOG_FILE_PATH = "C:\Walton-GPU-64\log.txt"
 Global Const $DIRECTORY_PATH = "C:\Walton-GPU-64"
 Global Const $START_GPU_BAT_TITLE = "C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat"
 Global Const $CONSOLE_HOST_TITLE = "C:\Windows\SYSTEM32\cmd.exe"
-Global Const $hFileOpen = FileOpen($LOG_FILE_PATH, $FO_APPEND)
 
+Global $hFileOpen = FileOpen($LOG_FILE_PATH, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
 Global $consoleHost = 0
