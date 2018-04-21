@@ -50,10 +50,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 
 _SingleScript() ;prevents more than one instance from running.
 
-
-
 Global Const $logFilePath = "C:\Walton-GPU-64\log.txt"
-Global $loopSizeInMins = 1 ;change the time of the main loop here.
+Global $loopSizeInMins = 60 ;change the time of the main loop here.
 Global $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
@@ -66,16 +64,17 @@ If $hFileOpen = -1 Then
    Return False
    EndIf
 FileClose($hFileOpen)
+
 Func clipToFile()
    $count = 0
    While $count < 50
        $count = $count + 1
-       WinActivate("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat")
-       If WinActive("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+       WinActivate("start_gpu.bat")
+       If WinActive("start_gpu.bat") <> 0 Then
 		  Send("!{SPACE}")
-	      If WinActive("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+	      If WinActive("start_gpu.bat") <> 0 Then
 		     Send("e")
-			 If WinActive("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+			 If WinActive("start_gpu.bat") <> 0 Then
 				Send("s")
 				Send("{ENTER}")
 				ExitLoop(1)
@@ -89,7 +88,7 @@ Func clipToFile()
 		 Sleep(150)
 	  EndIf
    WEnd
-
+   ;chop this function here, split to two functions one for copy, one for quit.
    $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
    FileWrite($hFileOpen, _NowDate() & " " & _nowTime() & @CRLF)
    FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
@@ -153,7 +152,7 @@ While 1
    While $count < 50
 	  $count = $count + 1
        WinActivate("C:\Windows\SYSTEM32\cmd.exe")
-	   If WinActivate("C:\Windows\SYSTEM32\cmd.exe") <> 0 Then
+	   If WinActive("C:\Windows\SYSTEM32\cmd.exe") <> 0 Then
 		  Send("start_gpu.bat")
 		  Send("{ENTER}")
 		  Sleep(750)
