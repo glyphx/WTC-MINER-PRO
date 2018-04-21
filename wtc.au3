@@ -51,12 +51,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 _SingleScript() ;prevents more than one instance from running.
 
 Global Const $LOOP_SIZE_IN_MIN = 60 ;change the time of the main loop here.
-Global Const $LOG_FILE_PATH = "C:\Walton-GPU-64\log.txt"
-Global Const $DIRECTORY_PATH = "C:\Walton-GPU-64"
+Global Const $LOG_PATH = "C:\Walton-GPU-64\log.txt"
+Global Const $ROOT_PATH = "C:\Walton-GPU-64"
+Global Const $MING_PATH = "C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe"
+Global Const $CONSOLE_HOST_RUN_CMD = 'cmd /K "cd C:\Walton-GPU-64\"'
 Global Const $START_GPU_BAT_TITLE = "C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat"
 Global Const $CONSOLE_HOST_TITLE = "C:\Windows\SYSTEM32\cmd.exe"
 
-Global $hFileOpen = FileOpen($LOG_FILE_PATH, $FO_APPEND)
+
+
+Global $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
 Global $consoleHost = 0
@@ -91,7 +95,7 @@ Func clipToFile()
 	  EndIf
    WEnd
    ;chop this function here, split to two functions one for copy, one for quit.
-   $hFileOpen = FileOpen($LOG_FILE_PATH, $FO_APPEND)
+   $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
    FileWrite($hFileOpen, _NowDate() & " " & _nowTime() & @CRLF)
    FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
    FileWrite($hFileOpen, _nowDate() & " " & _nowTime() & @CRLF)
@@ -109,6 +113,8 @@ Func clipToFile()
    WEnd
    Sleep(100)
 EndFunc
+
+; This function runs most of the time the script is active, waiting to capture scroll lock, log, and quit.
 Func timedEscape()
    $pressed = 0
    $hTimer = TimerInit()
@@ -131,10 +137,10 @@ Func timedEscape()
  EndFunc
 
 While 1
-   $ming = Run("C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe")
+   $ming = Run($MING_PATH)
    Sleep(500)
-   $consoleHost = Run('cmd /K "cd C:\Walton-GPU-64\"') ;creates cmd.exe handle, either create .bat or use pid
-   ;$consoleHandle = WinHandFromPID($consoleHost, $DIRECTORY_PATH = "C:\Walton-GPU-64", $timeout = 8)
+   $consoleHost = Run($CONSOLE_HOST_RUN_CMD) ;creates cmd.exe handle, either create .bat or use pid
+   
    $count = 0
    While $count < 50
 	  $count = $count + 1
@@ -159,6 +165,8 @@ While 1
 		  ExitLoop(1)
 	   EndIf
 	  WEnd
-   timedEscape()
-   clipToFile()
+
+   timedEscape() ;listen for escape key
+
+   clipToFile()  ; Restart and log if escape key was pressed, 
 WEnd
