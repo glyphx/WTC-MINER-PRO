@@ -50,14 +50,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 
 _SingleScript() ;prevents more than one instance from running.
 
-Global Const $logFilePath = "C:\Walton-GPU-64\log.txt"
-Global $loopSizeInMins = 60 ;change the time of the main loop here.
-Global $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
+Global Const $LOOP_SIZE_IN_MIN = 60 ;change the time of the main loop here.
+Global Const $LOG_FILE_PATH = "C:\Walton-GPU-64\log.txt"
+Global Const $DIRECTORY_PATH = "C:\Walton-GPU-64"
+Global Const $START_GPU_BAT_TITLE = "C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat"
+Global Const $CONSOLE_HOST_TITLE = "C:\Windows\SYSTEM32\cmd.exe"
+Global Const $hFileOpen = FileOpen($LOG_FILE_PATH, $FO_APPEND)
+
 Global $pressed = 0
 Global $hTimer = 0
 Global $consoleHost = 0
-Global $consoleHandle = 0
-Global $winTitle = "C:\Walton-GPU-64"
 
 If $hFileOpen = -1 Then
    MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file. Make sure you're able to open a new file @ C:\Walton-GPU-64.")
@@ -69,12 +71,12 @@ Func clipToFile()
    $count = 0
    While $count < 50
        $count = $count + 1
-       WinActivate("start_gpu.bat")
-       If WinActive("start_gpu.bat") <> 0 Then
+       WinActivate($START_GPU_BAT_TITLE)
+       If WinActive($START_GPU_BAT_TITLE) <> 0 Then
 		  Send("!{SPACE}")
-	      If WinActive("start_gpu.bat") <> 0 Then
+	      If WinActive($START_GPU_BAT_TITLE) <> 0 Then
 		     Send("e")
-			 If WinActive("start_gpu.bat") <> 0 Then
+			 If WinActive($START_GPU_BAT_TITLE) <> 0 Then
 				Send("s")
 				Send("{ENTER}")
 				ExitLoop(1)
@@ -89,7 +91,7 @@ Func clipToFile()
 	  EndIf
    WEnd
    ;chop this function here, split to two functions one for copy, one for quit.
-   $hFileOpen = FileOpen($logFilePath, $FO_APPEND)
+   $hFileOpen = FileOpen($LOG_FILE_PATH, $FO_APPEND)
    FileWrite($hFileOpen, _NowDate() & " " & _nowTime() & @CRLF)
    FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
    FileWrite($hFileOpen, _nowDate() & " " & _nowTime() & @CRLF)
@@ -110,7 +112,7 @@ EndFunc
 Func timedEscape()
    $pressed = 0
    $hTimer = TimerInit()
-   While (TimerDiff($hTimer) < ($loopSizeInMins * 60000))
+   While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 60000))
 	   If _IsPressed("91") Then ;is scroll lock pressed
 		   If Not $pressed Then
 			   ToolTip("Scroll Lock Behind Held Down, Shutting Down")
@@ -128,35 +130,20 @@ Func timedEscape()
 	WEnd
  EndFunc
 
-; Returns an array of all Windows associated with a given process
-Func WinHandFromPID($pid, $winTitle = "", $timeout = 8)
-    Local $secs = TimerInit()
-    Do
-        $wins = WinList($winTitle)
-        For $i = UBound($wins) - 1 To 1 Step -1
-            If (WinGetProcess($wins[$i][1]) <> $pid) Or (BitAND(WinGetState($wins[$i][1]), 2) = 0) Then _ArrayDelete($wins, $i)
-        Next
-        $wins[0][0] = UBound($wins) - 1
-        If $wins[0][0] Then Return SetError(0, 0, $wins)
-        Sleep(1000)
-    Until TimerDiff($secs) >= $timeout * 1000
-    Return SetError(1, 0, $wins)
- EndFunc   ;==>WinHandFromPID
-
 While 1
    $ming = Run("C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe")
    Sleep(500)
    $consoleHost = Run('cmd /K "cd C:\Walton-GPU-64\"') ;creates cmd.exe handle, either create .bat or use pid
-   ;$consoleHandle = WinHandFromPID($consoleHost, $winTitle = "C:\Walton-GPU-64", $timeout = 8)
+   ;$consoleHandle = WinHandFromPID($consoleHost, $DIRECTORY_PATH = "C:\Walton-GPU-64", $timeout = 8)
    $count = 0
    While $count < 50
 	  $count = $count + 1
-       WinActivate("C:\Windows\SYSTEM32\cmd.exe")
-	   If WinActive("C:\Windows\SYSTEM32\cmd.exe") <> 0 Then
+       WinActivate($CONSOLE_HOST_TITLE)
+	   If WinActive($CONSOLE_HOST_TITLE) <> 0 Then
 		  Send("start_gpu.bat")
 		  Send("{ENTER}")
 		  Sleep(750)
-		  If Winactive("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+		  If Winactive($START_GPU_BAT_TITLE) <> 0 Then
 		     ExitLoop(1)
 		  EndIf
 	   EndIf
@@ -165,8 +152,8 @@ While 1
    $count = 0
    While $count < 50
 	  $count = $count + 1
-	   WinActivate("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat")
-	   If Winactive("C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat") <> 0 Then
+	   WinActivate($START_GPU_BAT_TITLE)
+	   If Winactive($START_GPU_BAT_TITLE) <> 0 Then
 		  Send("miner.start()")
 		  Send("{ENTER}")
 		  ExitLoop(1)
