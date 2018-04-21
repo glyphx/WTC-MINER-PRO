@@ -153,7 +153,7 @@ While 1
    While $count < 50
 	  $count = $count + 1
        WinActivate("C:\Windows\SYSTEM32\cmd.exe")
-	   If WinActivate("C:\Windows\SYSTEM32\cmd.exe") <> 0 Then
+	   If WinActive("C:\Windows\SYSTEM32\cmd.exe") <> 0 Then
 		  Send("start_gpu.bat")
 		  Send("{ENTER}")
 		  Sleep(750)
