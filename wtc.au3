@@ -55,10 +55,8 @@ Global Const $LOG_PATH = "C:\Walton-GPU-64\log.txt"
 Global Const $ROOT_PATH = "C:\Walton-GPU-64"
 Global Const $MING_PATH = "C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe"
 Global Const $CONSOLE_HOST_RUN_CMD = 'cmd /K "cd C:\Walton-GPU-64\"'
-Global Const $START_GPU_BAT_TITLE = "C:\Windows\SYSTEM32\cmd.exe - start_gpu.bat"
-Global Const $CONSOLE_HOST_TITLE = "C:\Windows\SYSTEM32\cmd.exe"
-
-
+Global Const $START_GPU_BAT_TITLE = "C:\Windows\system32\cmd.exe - start_gpu.bat"
+Global Const $CONSOLE_HOST_TITLE = "C:\Windows\system32\cmd.exe"
 
 Global $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
 Global $pressed = 0
@@ -66,12 +64,13 @@ Global $hTimer = 0
 Global $consoleHost = 0
 
 If $hFileOpen = -1 Then
-   MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file. Make sure you're able to open a new file @ C:\Walton-GPU-64.")
+   MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file. Make sure you're able to open a new file @ " & $ROOT_PATH & ".")
    Return False
    EndIf
 FileClose($hFileOpen)
 
-Func clipToFile()
+;pure jank, uses alt+space -> e -> s to copy buffer.
+Func bufferToClip()
    $count = 0
    While $count < 50
        $count = $count + 1
@@ -93,14 +92,20 @@ Func clipToFile()
 	  Else
 		 Sleep(150)
 	  EndIf
-   WEnd
-   ;chop this function here, split to two functions one for copy, one for quit.
+   WEnd   
+EndFunc
+
+; append clipboard contents and date to log file
+Func writeToFile()   
    $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
    FileWrite($hFileOpen, _NowDate() & " " & _nowTime() & @CRLF)
    FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
    FileWrite($hFileOpen, _nowDate() & " " & _nowTime() & @CRLF)
    FileClose($hfileOpen)
-   Sleep(2000)
+EndFunc
+
+; close all the processes the script opened not including itself
+Func closeProcesses()
    ProcessClose("walton.exe")
    Sleep(100)
    ProcessClose($consoleHost)
@@ -114,7 +119,8 @@ Func clipToFile()
    Sleep(100)
 EndFunc
 
-; This function runs most of the time the script is active, waiting to capture scroll lock, log, and quit.
+; This function runs most of the time the script is active,
+; waiting to capture scroll lock, log, and quit.
 Func timedEscape()
    $pressed = 0
    $hTimer = TimerInit()
@@ -123,7 +129,9 @@ Func timedEscape()
 		   If Not $pressed Then
 			   ToolTip("Scroll Lock Behind Held Down, Shutting Down")
 			   $pressed = 1
-			   clipToFile()
+			   bufferToClip()
+			   writeToFile()
+			   closeProcesses()
 			   Exit(0)
 		   EndIf
 	   Else
@@ -138,35 +146,41 @@ Func timedEscape()
 
 While 1
    $ming = Run($MING_PATH)
-   Sleep(500)
+   Sleep(1000)
    $consoleHost = Run($CONSOLE_HOST_RUN_CMD) ;creates cmd.exe handle, either create .bat or use pid
-   
+   sleep(750)
    $count = 0
-   While $count < 50
-	  $count = $count + 1
-       WinActivate($CONSOLE_HOST_TITLE)
-	   If WinActive($CONSOLE_HOST_TITLE) <> 0 Then
-		  Send("start_gpu.bat")
-		  Send("{ENTER}")
-		  Sleep(750)
-		  If Winactive($START_GPU_BAT_TITLE) <> 0 Then
-		     ExitLoop(1)
-		  EndIf
-	   EndIf
+   While $count < 15
+	    $count = $count + 1
+	    Sleep(750)		
+        WinActivate($CONSOLE_HOST_TITLE)
+	    If WinActive($CONSOLE_HOST_TITLE) <> 0 Then
+		    Send("start_gpu.bat")
+		    Send("{ENTER}")
+		    Sleep(750)
+		    If Winactive($START_GPU_BAT_TITLE) <> 0 Then
+		        ExitLoop(1)
+			EndIf
+	    EndIf
 	Wend
 
    $count = 0
-   While $count < 50
-	  $count = $count + 1
-	   WinActivate($START_GPU_BAT_TITLE)
-	   If Winactive($START_GPU_BAT_TITLE) <> 0 Then
-		  Send("miner.start()")
-		  Send("{ENTER}")
-		  ExitLoop(1)
-	   EndIf
-	  WEnd
+   While $count < 15
+	    sleep(1000)
+	    $count = $count + 1
+	    WinActivate($START_GPU_BAT_TITLE)
+	    If Winactive($START_GPU_BAT_TITLE) <> 0 Then
+		    Send("miner.start()")
+		    Send("{ENTER}")
+		    ExitLoop(1)
+	    EndIf
+	WEnd
 
-   timedEscape() ;listen for escape key
+   timedEscape() ;listen for escape key, if pressed run buffer2clip and closeProcesses
 
-   clipToFile()  ; Restart and log if escape key was pressed, 
+   buffer2clip()  ; Restart and log if escape key was pressed
+
+   writeToFile() ; writes clipboard to logfile 
+
+   closeProcesses() ; close all processes started by script
 WEnd
