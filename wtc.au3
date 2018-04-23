@@ -55,8 +55,8 @@ Global Const $LOG_PATH = "C:\Walton-GPU-64\log.txt"
 Global Const $ROOT_PATH = "C:\Walton-GPU-64"
 Global Const $MING_PATH = "C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe"
 Global Const $CONSOLE_HOST_RUN_CMD = 'cmd /K "cd C:\Walton-GPU-64\"'
-Global Const $START_GPU_BAT_TITLE = "start_gpu.bat"
-Global Const $CONSOLE_HOST_TITLE = "C:\Windows\SYSTEM32\cmd.exe"
+Global Const $START_GPU_BAT_TITLE = "C:\WINDOWS\SYSTEM32\cmd.exe -start_gpu.bat"
+Global Const $CONSOLE_HOST_TITLE = "C:\WINDOWS\SYSTEM32\cmd.exe"
 ;rewrite so these constants aren't necessary, but derived from opened processes. 
 
 
