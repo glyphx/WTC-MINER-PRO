@@ -55,8 +55,10 @@ Global Const $LOG_PATH = "C:\Walton-GPU-64\log.txt"
 Global Const $ROOT_PATH = "C:\Walton-GPU-64"
 Global Const $MING_PATH = "C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe"
 Global Const $CONSOLE_HOST_RUN_CMD = 'cmd /K "cd C:\Walton-GPU-64\"'
-Global Const $START_GPU_BAT_TITLE = "C:\Windows\system32\cmd.exe - start_gpu.bat"
-Global Const $CONSOLE_HOST_TITLE = "C:\Windows\system32\cmd.exe"
+Global Const $START_GPU_BAT_TITLE = "start_gpu.bat"
+Global Const $CONSOLE_HOST_TITLE = "C:\Windows\SYSTEM32\cmd.exe"
+;rewrite so these constants aren't necessary, but derived from opened processes. 
+
 
 Global $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
 Global $pressed = 0
@@ -96,7 +98,7 @@ Func bufferToClip()
 EndFunc
 
 ; append clipboard contents and date to log file
-Func writeToFile()   
+Func writeToFile() 
    $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
    FileWrite($hFileOpen, _NowDate() & " " & _nowTime() & @CRLF)
    FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
@@ -105,7 +107,7 @@ Func writeToFile()
 EndFunc
 
 ; close all the processes the script opened not including itself
-Func closeProcesses()
+Func closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
    ProcessClose("walton.exe")
    Sleep(100)
    ProcessClose($consoleHost)
@@ -178,7 +180,7 @@ While 1
 
    timedEscape() ;listen for escape key, if pressed run buffer2clip and closeProcesses
 
-   buffer2clip()  ; Restart and log if escape key was pressed
+   bufferToclip()  ; Restart and log if escape key was pressed
 
    writeToFile() ; writes clipboard to logfile 
 
