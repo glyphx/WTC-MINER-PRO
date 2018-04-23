@@ -100,9 +100,9 @@ EndFunc
 ; append clipboard contents and date to log file
 Func writeToFile() 
    $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
-   FileWrite($hFileOpen, _NowDate() & " " & _nowTime() & @CRLF)
+   FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
    FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
-   FileWrite($hFileOpen, _nowDate() & " " & _nowTime() & @CRLF)
+   FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
    FileClose($hfileOpen)
 EndFunc
 
@@ -148,13 +148,13 @@ Func timedEscape()
 
 While 1
    $ming = Run($MING_PATH)
-   Sleep(100)
-   $consoleHost = Run($CONSOLE_HOST_RUN_CMD) ;creates cmd.exe handle, either create .bat or use pid
-   sleep(100)
+   Sleep(750)
+   $consoleHost = Run($CONSOLE_HOST_RUN_CMD) 
+   sleep(750)
    $count = 0
    While $count < 15
 	    $count = $count + 1
-	    Sleep(100)		
+	    Sleep(750)		
         WinActivate($CONSOLE_HOST_TITLE)
 	    If WinActive($CONSOLE_HOST_TITLE) <> 0 Then
 		    Send("start_gpu.bat")
@@ -178,7 +178,7 @@ While 1
 	    EndIf
 	WEnd
 
-   timedEscape() ;listen for escape key, if pressed run buffer2clip and closeProcesses
+   timedEscape() ;listen for escape key, if pressed run bufferToClip, writeToFile, and closeProcesses
 
    bufferToclip()  ; Restart and log if escape key was pressed
 
