@@ -55,7 +55,7 @@ Global Const $LOG_PATH = "C:\Walton-GPU-64\log.txt"
 Global Const $ROOT_PATH = "C:\Walton-GPU-64"
 Global Const $MING_PATH = "C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe"
 Global Const $CONSOLE_HOST_RUN_CMD = 'cmd /K "cd C:\Walton-GPU-64\"'
-Global Const $START_GPU_BAT_TITLE = "C:\WINDOWS\SYSTEM32\cmd.exe -start_gpu.bat"
+Global Const $START_GPU_BAT_TITLE = "C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat"
 Global Const $CONSOLE_HOST_TITLE = "C:\WINDOWS\SYSTEM32\cmd.exe"
 ;rewrite so these constants aren't necessary, but derived from opened processes. 
 
@@ -115,7 +115,7 @@ Func closeProcesses() ;rewrite to be more generic so it can be started before ma
    $count = 3
    while ProcessExists($ming) & $count > 0
 	  $count = $count - 1
-	  sleep(1000)
+	  sleep(100)
 	  Processclose($ming)
    WEnd
    Sleep(100)
@@ -148,18 +148,18 @@ Func timedEscape()
 
 While 1
    $ming = Run($MING_PATH)
-   Sleep(1000)
+   Sleep(100)
    $consoleHost = Run($CONSOLE_HOST_RUN_CMD) ;creates cmd.exe handle, either create .bat or use pid
-   sleep(750)
+   sleep(100)
    $count = 0
    While $count < 15
 	    $count = $count + 1
-	    Sleep(750)		
+	    Sleep(100)		
         WinActivate($CONSOLE_HOST_TITLE)
 	    If WinActive($CONSOLE_HOST_TITLE) <> 0 Then
 		    Send("start_gpu.bat")
 		    Send("{ENTER}")
-		    Sleep(750)
+		    Sleep(100)
 		    If Winactive($START_GPU_BAT_TITLE) <> 0 Then
 		        ExitLoop(1)
 			EndIf
@@ -168,7 +168,7 @@ While 1
 
    $count = 0
    While $count < 15
-	    sleep(1000)
+	    sleep(100)
 	    $count = $count + 1
 	    WinActivate($START_GPU_BAT_TITLE)
 	    If Winactive($START_GPU_BAT_TITLE) <> 0 Then
