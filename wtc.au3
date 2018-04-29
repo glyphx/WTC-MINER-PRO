@@ -6,9 +6,6 @@
 
  Version 0.4 Goals:
  Input goes directly to shells
- Remove all ambiguity from windows like cmd.Exe
- code check for Windows / WINDOWS problem
- try shell execute, track all pids, convert to handle if needed.
  try sticking to one console host window and restarting proceses, ming too if needed
  clear the copy buffer every time and make sure there is something there before writing the next Time
 
@@ -50,23 +47,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 
 _SingleScript() ;prevents more than one instance from running.
 
-Global Const $LOOP_SIZE_IN_MIN = 60 ;change the time of the main loop here.
-Global Const $LOG_PATH = "C:\Walton-GPU-64\log.txt"
-Global Const $ROOT_PATH = "C:\Walton-GPU-64"
-Global Const $MING_PATH = "C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe"
-Global Const $CONSOLE_HOST_RUN_CMD = 'cmd /K "cd C:\Walton-GPU-64\"'
-Global Const $START_GPU_BAT_TITLE = "C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat"
-Global Const $CONSOLE_HOST_TITLE = "C:\WINDOWS\SYSTEM32\cmd.exe"
-;rewrite so these constants aren't necessary, but derived from opened processes.
+Global Const $LOOP_SIZE_IN_MIN = 60                 ;change the time of the main loop here.
+Global Const $log_path = "C:\Walton-GPU-64\log.txt" ;destination of the where to keep the log file, path must exist. 
+Global Const $ROOT_PATH = "C:\Walton-GPU-64"        ;installation folders root path
+Global Const $NUM_GPUS = 2                          ;set the number of gpu's
 
-
-Global $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
+Global $gpu_path = ''
+Global $log_path = $ROOT_PATH & $gpu_path & "\log.txt"
+Global $ming_path = $ROOT_PATH & $gpu_path & "\ming_run.exe"
+Global $console_host_run_cmd = 'cmd /K "cd ' & $ROOT_PATH & $gpu_path & '\"'
+Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
-Global $consoleHost = 0
+Global $consoleHost_pid = 0
 
 If $hFileOpen = -1 Then
-   MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install path matches. Make sure you're able to open a new file @ " & $ROOT_PATH & ".")
+   MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install path matches the configuration. Make sure you're able to open a new file @ " & $ROOT_PATH & ".")
    Return False
    EndIf
 FileClose($hFileOpen)
@@ -117,7 +113,7 @@ EndFunc
 
 ; append clipboard contents and date to log file
 Func writeToFile()
-   $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
+   $hFileOpen = FileOpen($log_path, $FO_APPEND)
    FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
    FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
    FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
@@ -128,13 +124,13 @@ EndFunc
 Func closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
    ProcessClose("walton.exe")
    Sleep(100)
-   ProcessClose($consoleHost)
+   ProcessClose($consoleHost_pid)
    Sleep(100)
    $count = 3
-   while ProcessExists($ming) & $count > 0
+   while ProcessExists($ming_pid) & $count > 0
 	  $count = $count - 1
-	  sleep(100)
-	  Processclose($ming)
+	  sleep(1000)
+	  Processclose($ming_pid)
    WEnd
    Sleep(100)
 EndFunc
@@ -165,13 +161,13 @@ Func timedEscape()
  EndFunc
 
 While 1
-   $ming = Run($MING_PATH)
+   $ming_pid = Run($ming_path)
    Sleep(750)
 
-   $consoleHost = Run($CONSOLE_HOST_RUN_CMD)
+   $consoleHost_pid = Run($console_host_run_cmd)
    sleep(750)
-   $mingHwnd = _GetHwndFromPID($ming)
-   $consoleHostHwnd = _GetHwndFromPID($consoleHost)
+   $mingHwnd = _GetHwndFromPID($ming_pid)
+   $consoleHostHwnd = _GetHwndFromPID($consoleHost_pid)
    $count = 0
    While $count < 15
 	    $count = $count + 1
@@ -198,6 +194,8 @@ While 1
 		    ExitLoop(1)
 	    EndIf
 	WEnd
+
+	
 
    timedEscape() ;listen for escape key, if pressed run bufferToClip, writeToFile, and closeProcesses
 
