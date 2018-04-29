@@ -34,32 +34,31 @@ DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ce ----------------------------------------------------------------------------
-
-#include <AutoItConstants.au3>
-#include <Date.au3>
-#include <Clipboard.au3>
-#include <FileConstants.au3>
-#include <WinAPIFiles.au3>
-#include <MsgBoxConstants.au3>
-#include <_SingleScript.au3>
-#include <Misc.au3>
 #include <Array.au3>
+#include <AutoItConstants.au3>
+#include <Clipboard.au3>
+#include <Date.au3>
+#include <FileConstants.au3>
+#include <Misc.au3>
+#include <MsgBoxConstants.au3>
+#include <WinAPIFiles.au3>
+#include <_SingleScript.au3>
 
 _SingleScript() ;prevents more than one instance from running.
 
 Global Const $LOOP_SIZE_IN_MIN = 60                 ;change the time of the main loop here.
-Global Const $log_path = "C:\Walton-GPU-64\log.txt" ;destination of the where to keep the log file, path must exist. 
 Global Const $ROOT_PATH = "C:\Walton-GPU-64"        ;installation folders root path
 Global Const $NUM_GPUS = 2                          ;set the number of gpu's
 
 Global $gpu_path = ''
 Global $log_path = $ROOT_PATH & $gpu_path & "\log.txt"
 Global $ming_path = $ROOT_PATH & $gpu_path & "\ming_run.exe"
-Global $console_host_run_cmd = 'cmd /K "cd ' & $ROOT_PATH & $gpu_path & '\"'
+Global $consoleHostRunCmd = 'cmd /K "cd ' & $ROOT_PATH & $gpu_path & '\"'
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
-Global $consoleHost_pid = 0
+Global $consoleHostPID = 0
+
 
 If $hFileOpen = -1 Then
    MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install path matches the configuration. Make sure you're able to open a new file @ " & $ROOT_PATH & ".")
@@ -67,6 +66,7 @@ If $hFileOpen = -1 Then
    EndIf
 FileClose($hFileOpen)
 
+;protip if time matters to you, the less processes you have running, the less time this takes.
 ;Function for getting HWND from PID
 Func _GetHwndFromPID($PID)
 	$hWnd = 0
@@ -122,15 +122,15 @@ EndFunc
 
 ; close all the processes the script opened not including itself
 Func closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
-   ProcessClose("walton.exe")
+   ProcessClose("walton.exe");needs to be fixed 
    Sleep(100)
-   ProcessClose($consoleHost_pid)
+   ProcessClose($consoleHostPID)
    Sleep(100)
    $count = 3
-   while ProcessExists($ming_pid) & $count > 0
+   while ProcessExists($mingPID) & $count > 0
 	  $count = $count - 1
 	  sleep(1000)
-	  Processclose($ming_pid)
+	  Processclose($mingPID)
    WEnd
    Sleep(100)
 EndFunc
@@ -160,19 +160,22 @@ Func timedEscape()
 	WEnd
  EndFunc
 
-While 1
-   $ming_pid = Run($ming_path)
-   Sleep(750)
 
-   $consoleHost_pid = Run($console_host_run_cmd)
-   sleep(750)
-   $mingHwnd = _GetHwndFromPID($ming_pid)
-   $consoleHostHwnd = _GetHwndFromPID($consoleHost_pid)
-   $count = 0
-   While $count < 15
+Func runCmds(); write arrray to contain pid, handle, and also title if necessary
+    $mingPID = Run($ming_path)
+    Sleep(750)
+    $consoleHostPID = Run($consoleHostRunCmd)
+    sleep(750)
+    $mingHwnd = _GetHwndFromPID($mingPID)
+    $consoleHostHwnd = _GetHwndFromPID($consoleHostPID)
+    
+;main(), runs commands, in turn getting PID's and translating them to window handles.
+While 1   
+    $count = 0
+    While $count < 15
 	    $count = $count + 1
 	    Sleep(750)
-        WinActivate($consoleHostHwnd)
+         WinActivate($consoleHostHwnd)
 	    If WinActive($consoleHostHwnd) <> 0 Then
 		    Send("start_gpu.bat")
 		    Send("{ENTER}")
