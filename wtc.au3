@@ -57,7 +57,7 @@ Global Const $MING_PATH = "C:\Walton-GPU-64\GPUMing_v0.2\ming_run.exe"
 Global Const $CONSOLE_HOST_RUN_CMD = 'cmd /K "cd C:\Walton-GPU-64\"'
 Global Const $START_GPU_BAT_TITLE = "C:\WINDOWS\SYSTEM32\cmd.exe - start_gpu.bat"
 Global Const $CONSOLE_HOST_TITLE = "C:\WINDOWS\SYSTEM32\cmd.exe"
-;rewrite so these constants aren't necessary, but derived from opened processes. 
+;rewrite so these constants aren't necessary, but derived from opened processes.
 
 
 Global $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
@@ -66,22 +66,40 @@ Global $hTimer = 0
 Global $consoleHost = 0
 
 If $hFileOpen = -1 Then
-   MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file. Make sure you're able to open a new file @ " & $ROOT_PATH & ".")
+   MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install path matches. Make sure you're able to open a new file @ " & $ROOT_PATH & ".")
    Return False
    EndIf
 FileClose($hFileOpen)
+
+;Function for getting HWND from PID
+Func _GetHwndFromPID($PID)
+	$hWnd = 0
+	$winlist = WinList()
+	Do
+		For $i = 1 To $winlist[0][0]
+			If $winlist[$i][0] <> "" Then
+				$iPID2 = WinGetProcess($winlist[$i][1])
+				If $iPID2 = $PID Then
+					$hWnd = $winlist[$i][1]
+					ExitLoop
+				EndIf
+			EndIf
+		Next
+	Until $hWnd <> 0
+	Return $hWnd
+ EndFunc;==>_GetHwndFromPID
 
 ;pure jank, uses alt+space -> e -> s to copy buffer.
 Func bufferToClip()
    $count = 0
    While $count < 50
        $count = $count + 1
-       WinActivate($START_GPU_BAT_TITLE)
-       If WinActive($START_GPU_BAT_TITLE) <> 0 Then
+       WinActivate($consoleHostHwnd)
+       If WinActive($consoleHostHwnd) <> 0 Then
 		  Send("!{SPACE}")
-	      If WinActive($START_GPU_BAT_TITLE) <> 0 Then
+	      If WinActive($consoleHostHwnd) <> 0 Then
 		     Send("e")
-			 If WinActive($START_GPU_BAT_TITLE) <> 0 Then
+			 If WinActive($consoleHostHwnd) <> 0 Then
 				Send("s")
 				Send("{ENTER}")
 				ExitLoop(1)
@@ -94,11 +112,11 @@ Func bufferToClip()
 	  Else
 		 Sleep(150)
 	  EndIf
-   WEnd   
+   WEnd
 EndFunc
 
 ; append clipboard contents and date to log file
-Func writeToFile() 
+Func writeToFile()
    $hFileOpen = FileOpen($LOG_PATH, $FO_APPEND)
    FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
    FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
@@ -149,18 +167,21 @@ Func timedEscape()
 While 1
    $ming = Run($MING_PATH)
    Sleep(750)
-   $consoleHost = Run($CONSOLE_HOST_RUN_CMD) 
+
+   $consoleHost = Run($CONSOLE_HOST_RUN_CMD)
    sleep(750)
+   $mingHwnd = _GetHwndFromPID($ming)
+   $consoleHostHwnd = _GetHwndFromPID($consoleHost)
    $count = 0
    While $count < 15
 	    $count = $count + 1
-	    Sleep(750)		
-        WinActivate($CONSOLE_HOST_TITLE)
-	    If WinActive($CONSOLE_HOST_TITLE) <> 0 Then
+	    Sleep(750)
+        WinActivate($consoleHostHwnd)
+	    If WinActive($consoleHostHwnd) <> 0 Then
 		    Send("start_gpu.bat")
 		    Send("{ENTER}")
 		    Sleep(100)
-		    If Winactive($START_GPU_BAT_TITLE) <> 0 Then
+		    If Winactive($consoleHostHwnd) <> 0 Then
 		        ExitLoop(1)
 			EndIf
 	    EndIf
@@ -170,8 +191,8 @@ While 1
    While $count < 15
 	    sleep(100)
 	    $count = $count + 1
-	    WinActivate($START_GPU_BAT_TITLE)
-	    If Winactive($START_GPU_BAT_TITLE) <> 0 Then
+	    WinActivate($consoleHostHwnd)
+	    If Winactive($consoleHostHwnd) <> 0 Then
 		    Send("miner.start()")
 		    Send("{ENTER}")
 		    ExitLoop(1)
@@ -182,7 +203,7 @@ While 1
 
    bufferToclip()  ; Restart and log if escape key was pressed
 
-   writeToFile() ; writes clipboard to logfile 
+   writeToFile() ; writes clipboard to logfile
 
    closeProcesses() ; close all processes started by script
 WEnd
