@@ -33,7 +33,10 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FO
 DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ce ----------------------------------------------------------------------------
+#ce ----------------------------------------------------------------------------\
+;Assumptions: 
+;Your directory structure looks like structure of C:\Walton-GPU-64, C:\Walton-GPU-64-2, C:\Walton-GPU-64-3, etc.
+;Your .bat file includes --mine (should eliminate this need and construct the command ourselves instead of relying on .bat files)
 #include <Array.au3>
 #include <AutoItConstants.au3>
 #include <Clipboard.au3>
@@ -49,7 +52,7 @@ _SingleScript() ;prevents more than one instance from running.
 Global Const $LOOP_SIZE_IN_MIN = 60                 ;change the time of the main loop here.
 Global Const $ROOT_PATH = "C:\Walton-GPU-64"        ;installation folders root path
 Global Const $NUM_GPUS = 2                          ;set the number of gpu's
-
+Global Const $first_run = 
 Global $gpu_path = ''
 Global $log_path = $ROOT_PATH & $gpu_path & "\log.txt"
 Global $ming_path = $ROOT_PATH & $gpu_path & "\ming_run.exe"
@@ -61,9 +64,9 @@ Global $consoleHostPID = 0
 
 
 If $hFileOpen = -1 Then
-   MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install path matches the configuration. Make sure you're able to open a new file @ " & $ROOT_PATH & ".")
-   Return False
-   EndIf
+     MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install path matches the configuration. Make sure you're able to open a new file @ " & $ROOT_PATH & ".")
+     Return False
+EndIf
 FileClose($hFileOpen)
 
 ;protip if time matters to you, the less processes you have running, the less time this takes.
@@ -85,120 +88,111 @@ Func _GetHwndFromPID($PID)
 	Return $hWnd
  EndFunc;==>_GetHwndFromPID
 
-;pure jank, uses alt+space -> e -> s to copy buffer.
+;pure jank, uses alt+space -> e -> s to copy buffer. Replace with nonjank, thx. -self
 Func bufferToClip()
-   $count = 0
-   While $count < 50
-       $count = $count + 1
-       WinActivate($consoleHostHwnd)
-       If WinActive($consoleHostHwnd) <> 0 Then
-		  Send("!{SPACE}")
-	      If WinActive($consoleHostHwnd) <> 0 Then
-		     Send("e")
-			 If WinActive($consoleHostHwnd) <> 0 Then
-				Send("s")
-				Send("{ENTER}")
-				ExitLoop(1)
-			 Else
+    $count = 0
+    While $count < 50
+        $count = $count + 1
+        WinActivate($consoleHostHwnd)
+        If WinActive($consoleHostHwnd) <> 0 Then
+		    Send("!{SPACE}")
+	        If WinActive($consoleHostHwnd) <> 0 Then
+		        Send("e")
+			    If WinActive($consoleHostHwnd) <> 0 Then
+					Send("s")
+					Send("{ENTER}")
+					ExitLoop(1)
+				Else
 				Sleep(150)
-			 EndIf
-		  Else
-			Sleep(150)
-		 EndIf
-	  Else
-		 Sleep(150)
-	  EndIf
-   WEnd
+			EndIf
+		Else
+		    Sleep(150)
+		EndIf
+	Else
+		Sleep(150)
+	EndIf
+    WEnd
 EndFunc
 
 ; append clipboard contents and date to log file
 Func writeToFile()
-   $hFileOpen = FileOpen($log_path, $FO_APPEND)
-   FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
-   FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
-   FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
-   FileClose($hfileOpen)
+     $hFileOpen = FileOpen($log_path, $FO_APPEND)
+     FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
+     FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF)
+     FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
+     FileClose($hfileOpen)
+EndFunc
+;kill processes associated on a range of ports
+Func killProcessesOnPorts()
 EndFunc
 
 ; close all the processes the script opened not including itself
 Func closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
-   ProcessClose("walton.exe");needs to be fixed 
-   Sleep(100)
-   ProcessClose($consoleHostPID)
-   Sleep(100)
-   $count = 3
-   while ProcessExists($mingPID) & $count > 0
-	  $count = $count - 1
-	  sleep(1000)
-	  Processclose($mingPID)
-   WEnd
-   Sleep(100)
+     ProcessClose("walton.exe");needs to be fixed 
+     Sleep(100)
+     ProcessClose($consoleHostPID)
+     Sleep(100)
+     $count = 3
+     while ProcessExists($mingPID) & $count > 0
+	     $count = $count - 1
+	     sleep(1000)
+	     Processclose($mingPID)
+     WEnd
+     Sleep(100)
 EndFunc
 
 ; This function runs most of the time the script is active,
 ; waiting to capture scroll lock, log, and quit.
 Func timedEscape()
-   $pressed = 0
-   $hTimer = TimerInit()
-   While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 60000))
-	   If _IsPressed("91") Then ;is scroll lock pressed
-		   If Not $pressed Then
-			   ToolTip("Scroll Lock Behind Held Down, Shutting Down")
-			   $pressed = 1
-			   bufferToClip()
-			   writeToFile()
-			   closeProcesses()
-			   Exit(0)
-		   EndIf
-	   Else
-		   If $pressed Then
+     $pressed = 0
+     $hTimer = TimerInit()
+     While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 60000))
+	     If _IsPressed("91") Then ;is scroll lock pressed
+		     If Not $pressed Then
+			     ToolTip("Scroll Lock Behind Held Down, Shutting Down")
+			     $pressed = 1
+			     bufferToClip()
+			     writeToFile()
+			     closeProcesses()
+			     Exit(0)
+               EndIf
+          Else
+		     If $pressed Then
 			   ToolTip("")
 			   $pressed = 0
-		   EndIf
-	   EndIf
-	   Sleep(250)
+		     EndIf
+	     EndIf
+	Sleep(250)
 	WEnd
- EndFunc
-
+EndFunc
 
 Func runCmds(); write arrray to contain pid, handle, and also title if necessary
-    $mingPID = Run($ming_path)
-    Sleep(750)
-    $consoleHostPID = Run($consoleHostRunCmd)
-    sleep(750)
-    $mingHwnd = _GetHwndFromPID($mingPID)
-    $consoleHostHwnd = _GetHwndFromPID($consoleHostPID)
+
+     $mingPID = Run($ming_path)
+     Sleep(750)
+     $consoleHostPID = Run($consoleHostRunCmd)
+     sleep(750)
+     $mingHwnd = _GetHwndFromPID($mingPID)
+     $consoleHostHwnd = _GetHwndFromPID($consoleHostPID)
     
 ;main(), runs commands, in turn getting PID's and translating them to window handles.
+
+;replace this below section with constructed command - test in isolation
 While 1   
-    $count = 0
-    While $count < 15
-	    $count = $count + 1
-	    Sleep(750)
-         WinActivate($consoleHostHwnd)
-	    If WinActive($consoleHostHwnd) <> 0 Then
-		    Send("start_gpu.bat")
-		    Send("{ENTER}")
-		    Sleep(100)
-		    If Winactive($consoleHostHwnd) <> 0 Then
+     $count = 0
+     While $count < 15
+	     $count = $count + 1
+	     Sleep(750)
+          WinActivate($consoleHostHwnd)
+	     If WinActive($consoleHostHwnd) <> 0 Then
+		     Send("start_gpu.bat")
+		     Send("{ENTER}")
+		     Sleep(100)
+		     If Winactive($consoleHostHwnd) <> 0 Then
 		        ExitLoop(1)
 			EndIf
-	    EndIf
+	     EndIf
 	Wend
-
-   $count = 0
-   While $count < 15
-	    sleep(100)
-	    $count = $count + 1
-	    WinActivate($consoleHostHwnd)
-	    If Winactive($consoleHostHwnd) <> 0 Then
-		    Send("miner.start()")
-		    Send("{ENTER}")
-		    ExitLoop(1)
-	    EndIf
-	WEnd
-
-	
 
    timedEscape() ;listen for escape key, if pressed run bufferToClip, writeToFile, and closeProcesses
 
