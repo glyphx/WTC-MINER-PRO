@@ -11,8 +11,8 @@
 
 
  Script Function:
-	Opens WTC miner, starts mining, logs, and closes on a variable loop.
-	Press and Hold Scroll Lock for ~3s and release to quit and log.
+     Opens WTC miner, starts mining, logs, and closes on a variable loop.
+     Press and Hold Scroll Lock for ~3s and release to quit and log.
 
 MIT LICENSE
 Copyleft 2018 glyphx, all unicorns reserved.
@@ -56,7 +56,7 @@ Global Const $first_run =
 Global $gpu_path = ''
 Global $log_path = $ROOT_PATH & $gpu_path & "\log.txt"
 Global $ming_path = $ROOT_PATH & $gpu_path & "\ming_run.exe"
-Global $consoleHostRunCmd = 'cmd /K "cd ' & $ROOT_PATH & $gpu_path & '\"'
+Global $consoleHostRunCmd = @COMSPEC & '/K "cd ' & $ROOT_PATH & $gpu_path & '\"'
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
@@ -72,21 +72,47 @@ FileClose($hFileOpen)
 ;protip if time matters to you, the less processes you have running, the less time this takes.
 ;Function for getting HWND from PID
 Func _GetHwndFromPID($PID)
-	$hWnd = 0
-	$winlist = WinList()
-	Do
-		For $i = 1 To $winlist[0][0]
-			If $winlist[$i][0] <> "" Then
-				$iPID2 = WinGetProcess($winlist[$i][1])
-				If $iPID2 = $PID Then
-					$hWnd = $winlist[$i][1]
-					ExitLoop
-				EndIf
-			EndIf
-		Next
-	Until $hWnd <> 0
-	Return $hWnd
+     $hWnd = 0
+     $winlist = WinList()
+     Do
+          For $i = 1 To $winlist[0][0]
+               If $winlist[$i][0] <> "" Then
+                    $iPID2 = WinGetProcess($winlist[$i][1])
+                    If $iPID2 = $PID Then
+                         $hWnd = $winlist[$i][1]
+                         ExitLoop
+                    EndIf
+               EndIf
+          Next
+     Until $hWnd <> 0
+     Return $hWnd
  EndFunc;==>_GetHwndFromPID
+
+ Func _Au3Int_Clr()
+    Local $hConsole, $aRet
+
+    $aRet = DllCall("kernel32.dll", "hwnd", "GetStdHandle", "dword", -11)
+    If @error Or (Not IsArray($aRet)) Or ($aRet[0] = -1) Then Return SetError(1, 0, False)
+    $hConsole = $aRet[0]
+
+    Local $tScreenBufferInfo = DllStructCreate("short X; short Y; short; short; short; short; short; short; short; short; short")
+
+    $aRet = DllCall("kernel32.dll", "bool", "GetConsoleScreenBufferInfo", "hwnd", $hConsole, "ptr", DllStructGetPtr($tScreenBufferInfo))
+    If @error Or (Not IsArray($aRet)) Or (Not $aRet[0]) Then Return SetError(2, 0, False)
+
+    $aRet = DllCall("kernel32.dll", "int", "FillConsoleOutputCharacterW", _
+            "handle", $hConsole, _
+            "byte", 0x20, _
+            "dword", DllStructGetData($tScreenBufferInfo, "X") * DllStructGetData($tScreenBufferInfo, "Y"), _
+            "dword", 0, _
+            "dword*", 0)
+    If @error Or (Not IsArray($aRet)) Or (Not $aRet[0]) Then Return SetError(3, 0, False)
+
+    $aRet = DllCall("kernel32.dll", "int", "SetConsoleCursorPosition", "hwnd", $hConsole, "dword", 0)
+    If @error Or (Not IsArray($aRet)) Or (Not $aRet[0]) Then Return SetError(4, 0, False)
+
+    Return True
+EndFunc   ;==>_Au3Int_Clr
 
 ;pure jank, uses alt+space -> e -> s to copy buffer. Replace with nonjank, thx. -self
 Func bufferToClip()
@@ -95,22 +121,22 @@ Func bufferToClip()
         $count = $count + 1
         WinActivate($consoleHostHwnd)
         If WinActive($consoleHostHwnd) <> 0 Then
-		    Send("!{SPACE}")
-	        If WinActive($consoleHostHwnd) <> 0 Then
-		        Send("e")
-			    If WinActive($consoleHostHwnd) <> 0 Then
-					Send("s")
-					Send("{ENTER}")
-					ExitLoop(1)
-				Else
-				Sleep(150)
-			EndIf
-		Else
-		    Sleep(150)
-		EndIf
-	Else
-		Sleep(150)
-	EndIf
+              Send("!{SPACE}")
+             If WinActive($consoleHostHwnd) <> 0 Then
+                  Send("e")
+                   If WinActive($consoleHostHwnd) <> 0 Then
+                         Send("s")
+                         Send("{ENTER}")
+                         ExitLoop(1)
+                    Else
+                    Sleep(150)
+               EndIf
+          Else
+              Sleep(150)
+          EndIf
+     Else
+          Sleep(150)
+     EndIf
     WEnd
 EndFunc
 
@@ -125,7 +151,7 @@ EndFunc
 ;kill processes associated on a range of ports
 Func killProcessesOnPorts()
 EndFunc
-
+;rewrite to accept array of pids as input to kill -- or associated ports
 ; close all the processes the script opened not including itself
 Func closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
      ProcessClose("walton.exe");needs to be fixed 
@@ -134,9 +160,9 @@ Func closeProcesses() ;rewrite to be more generic so it can be started before ma
      Sleep(100)
      $count = 3
      while ProcessExists($mingPID) & $count > 0
-	     $count = $count - 1
-	     sleep(1000)
-	     Processclose($mingPID)
+          $count = $count - 1
+          sleep(1000)
+          WinKill($mingPID)
      WEnd
      Sleep(100)
 EndFunc
@@ -147,23 +173,23 @@ Func timedEscape()
      $pressed = 0
      $hTimer = TimerInit()
      While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 60000))
-	     If _IsPressed("91") Then ;is scroll lock pressed
-		     If Not $pressed Then
-			     ToolTip("Scroll Lock Behind Held Down, Shutting Down")
-			     $pressed = 1
-			     bufferToClip()
-			     writeToFile()
-			     closeProcesses()
-			     Exit(0)
+          If _IsPressed("91") Then ;is scroll lock pressed
+               If Not $pressed Then
+                    ToolTip("Scroll Lock Behind Held Down, Shutting Down")
+                    $pressed = 1
+                    bufferToClip()
+                    writeToFile()
+                    closeProcesses()
+                    Exit(0)
                EndIf
           Else
-		     If $pressed Then
-			   ToolTip("")
-			   $pressed = 0
-		     EndIf
-	     EndIf
-	Sleep(250)
-	WEnd
+               If $pressed Then
+                    ToolTip("")
+                    $pressed = 0
+               EndIf
+          EndIf
+     Sleep(250)
+     WEnd
 EndFunc
 
 Func runCmds(); write arrray to contain pid, handle, and also title if necessary
@@ -174,25 +200,26 @@ Func runCmds(); write arrray to contain pid, handle, and also title if necessary
      sleep(750)
      $mingHwnd = _GetHwndFromPID($mingPID)
      $consoleHostHwnd = _GetHwndFromPID($consoleHostPID)
-    
+EndFunc ;==>_runCmds() Returns array(s) containing pid/handles of run cmds
+
 ;main(), runs commands, in turn getting PID's and translating them to window handles.
 
 ;replace this below section with constructed command - test in isolation
 While 1   
      $count = 0
      While $count < 15
-	     $count = $count + 1
-	     Sleep(750)
+          $count = $count + 1
+          Sleep(750)
           WinActivate($consoleHostHwnd)
-	     If WinActive($consoleHostHwnd) <> 0 Then
-		     Send("start_gpu.bat")
-		     Send("{ENTER}")
-		     Sleep(100)
-		     If Winactive($consoleHostHwnd) <> 0 Then
-		        ExitLoop(1)
-			EndIf
-	     EndIf
-	Wend
+          If WinActive($consoleHostHwnd) <> 0 Then
+               Send("start_gpu.bat")
+               Send("{ENTER}")
+               Sleep(100)
+               If Winactive($consoleHostHwnd) <> 0 Then
+                    ExitLoop(1)
+               EndIf
+          EndIf
+     Wend
 
    timedEscape() ;listen for escape key, if pressed run bufferToClip, writeToFile, and closeProcesses
 
