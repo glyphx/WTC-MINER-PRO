@@ -52,32 +52,21 @@ Global Const $LOOP_SIZE_IN_MIN = 60                 ;change the time of the main
 Global Const $WORKING_DIR = "C:\"                     ;installation folders root path
 Global Const $FOLDER_NAME = "WALTON-GPU-64"         ;name of folder containing walton.exe
 Global Const $NUM_GPUS = 1                          ;set the number of gpu's
-Global Const $first_run = 
+Global Const $first_run = 0
+Global $gpu_path = '1\'
+Global $log_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "\log.txt"
+Global $ming_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "\ming_run.exe"
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
 Global $waltonPID = 0
-Global $gpuPOW = " --gpupow"
+Global $gpuPOW = ' --gpupow'
 Global $pPort = "30304"
 Global $rPort = "8546"
 Global $maxPeers = "50"
-Global $num_walton = 1
-Global $gpu_path = ''
-Global $log_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "\log.txt"
-Global $ming_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "\ming_run.exe"
-Global $runCMD = ' /k walton' & $num_walton 
-& $gpuPOW 
-& ' --identity "development"'
-& ' --rpc --rpcaddr 127.0.0.1'
-& ' --rpccorsdomain "*"'
-& ' --rpcapi "admin,personal,db,eth,net,web3,miner"'
-& ' --rpcport ' & $rPort & ' console'
-& ' --datadir "node1"' 
-& ' --port ' & $pPort
-& ' --ipcdisable'
-& ' --networkid 999'
-& ' --maxpeers ' & $maxPeers
-& ' --mine'
+Global $num_walton = '1'
+
+Global $runCMD = @COMSPEC  & ' /k walton' & $num_walton  & ' --identity "development"' & ' --rpc --rpcaddr 127.0.0.1' & ' --rpccorsdomain "*"' & ' --rpcapi "admin,personal,db,eth,net,web3,miner"' & ' --rpcport ' & $rPort & ' console' & ' --datadir "node1"'  & ' --port ' & $pPort & ' --ipcdisable' & ' --networkid 999' & ' --maxpeers ' & $maxPeers & ' --mine' & $gpuPOW 
 
 If $hFileOpen = -1 Then
      MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install "
@@ -85,6 +74,13 @@ If $hFileOpen = -1 Then
      Return False
 EndIf
 FileClose($hFileOpen)
+
+While 1
+     _runCMDS()
+     _timedEscape() ;listen for escape key, if pressed run bufferToClip, writeToFile, and _closeProcesses   
+     _ConsoleToFile() ; writes clipboard to logfile
+     _closeProcesses() ; close all processes started by script
+WEnd
 
 ;Function for getting HWND from PID
 Func _GetHwndFromPID($PID)
@@ -119,9 +115,7 @@ EndFunc
 ; close all the processes the script opened not including itself
 Func _closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
      ProcessClose('"walton' & $num_walton & '.exe"');needs to be fixed 
-     Sleep(100)
      ProcessClose($waltonPID)
-     Sleep(100)
      $count = 3
      while ProcessExists($mingPID) & $count > 0
           $count = $count - 1
@@ -131,7 +125,6 @@ Func _closeProcesses() ;rewrite to be more generic so it can be started before m
      Sleep(100)
 EndFunc
 
-; This function runs most of the time the script is active,
 ; waiting to capture scroll lock, log, and quit.
 Func _timedEscape()
      $pressed = 0
@@ -155,18 +148,10 @@ Func _timedEscape()
      WEnd
 EndFunc
 
-Func runCmds()
+Func _runCMDS()
      $mingPID = Run($ming_path)
      Sleep(750)
-     $waltonPID = Run($runCMD)       
-     
+     $waltonPID = Run($runCMD,$WORKING_DIR & $FOLDER_NAME & $gpu_path,@SW_SHOW)  
+     MsgBox(0,"",$waltonPID)          
 EndFunc ;==>_runCmds() Returns array(s) containing pid/handles of run cmds
 
-;main(), runs commands, in turn getting PID's and translating them to window handles.
-
-   _timedEscape() ;listen for escape key, if pressed run bufferToClip, writeToFile, and _closeProcesses   
-
-   _ConsoleToFile() ; writes clipboard to logfile
-
-   _closeProcesses() ; close all processes started by script
-WEnd
