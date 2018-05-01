@@ -6,15 +6,17 @@
 
 Global $avChildren
 
-Local $iPID = Run(@ComSpec & ' /k walton --identity "development" --gpupow --rpc --rpcaddr 127.0.0.1 --rpccorsdomain "*"  --datadir "node1" --port "30304" --rpcapi "admin,personal,db,eth,net,web3,miner" --ipcdisable --networkid 999 --rpcport 8546 console',"C:\Walton-GPU-64-2",@SW_SHOWNORMAL,0x10)
+Local $iPID = Run(@ComSpec & ' /k walton --identity "development" --gpupow --rpc --rpcaddr 127.0.0.1 --rpccorsdomain "*"  --datadir "node1" --port "30304" --rpcapi "admin,personal,db,eth,net,web3,miner" --ipcdisable --networkid 999 --rpcport 8546 console',"C:\Walton-GPU-64-2",@SW_HIDE,0x10)
 Sleep(10000)
 
 $thehwnd = _GetHwndFromPID($iPID)
 $parent = _WinAPI_GetParentProcess($iPID)
 MsgBox(0,"",$iPID & ' '  & $thehwnd & ' ' & $parent)
 WinListChildren($thehwnd, $avChildren)
-
+$attach = _WinAPI_AttachConsole($iPID)
+MsgBox(0,"",$attach)
 _ArrayDisplay($avChildren)
+ProcessClose($iPID)
 Exit
 
 
