@@ -108,7 +108,7 @@ EndFunc ; _GetStdHandle()
 ;                  Failure - False
 ;                  |1 - Window does not exist
 ; Author ........: Phil Hibbs (phil at hibbs dot me dot uk)
-; Modified.......:
+; Modified.......: Glyph
 ; Remarks .......:
 ; Related .......:
 ; Link ..........:
