@@ -49,37 +49,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 _SingleScript() ;prevents more than one instance from running.
 
 Global Const $LOOP_SIZE_IN_MIN = 60                 ;change the time of the main loop here.
-
-Global Const $ROOT_PATH = "C:\"                     ;installation folders root path
+Global Const $WORKING_DIR = "C:\"                     ;installation folders root path
 Global Const $FOLDER_NAME = "WALTON-GPU-64"         ;name of folder containing walton.exe
-Global Const $NUM_GPUS = 2                          ;set the number of gpu's
+Global Const $NUM_GPUS = 1                          ;set the number of gpu's
 Global Const $first_run = 
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
 Global $waltonPID = 0
 Global $gpuPOW = " --gpupow"
-Global $peerPORT = "30304"
-Global $rpcPORT = "8546"
+Global $pPort = "30304"
+Global $rPort = "8546"
+Global $maxPeers = "50"
+Global $num_walton = 1
 Global $gpu_path = ''
-Global $log_path = $ROOT_PATH & $FOLDER_NAME & $gpu_path & "\log.txt"
-Global $ming_path = $ROOT_PATH & $FOLDER_NAME & $gpu_path & "\ming_run.exe"
-Global $runCMD = ' /k walton' 
+Global $log_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "\log.txt"
+Global $ming_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "\ming_run.exe"
+Global $runCMD = ' /k walton' & $num_walton 
 & $gpuPOW 
 & ' --identity "development"'
 & ' --rpc --rpcaddr 127.0.0.1'
 & ' --rpccorsdomain "*"'
 & ' --rpcapi "admin,personal,db,eth,net,web3,miner"'
-& ' --rpcport ' & $rpcPORT & ' console'
+& ' --rpcport ' & $rPort & ' console'
 & ' --datadir "node1"' 
-& ' --port ' & $peerPORT
+& ' --port ' & $pPort
 & ' --ipcdisable'
 & ' --networkid 999'
-& ' --maxpeers 50'
+& ' --maxpeers ' & $maxPeers
+& ' --mine'
 
 If $hFileOpen = -1 Then
      MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install "
-     & "path matches the configuration. Make sure you're able to open a new file @ " & $ROOT_PATH & ".")
+     & "path matches the configuration. Make sure you're able to open a new file @ " & $WORKING_DIR & ".")
      Return False
 EndIf
 FileClose($hFileOpen)
@@ -102,11 +104,13 @@ Func _GetHwndFromPID($PID)
      Return $hWnd
  EndFunc;==>_GetHwndFromPID
 
-; append clipboard contents and date to log file
-Func _writeToFile()
+;open a file, grab handle to console buffer, print to file.
+Func _ConsoleToFile()
      $hFileOpen = FileOpen($log_path, $FO_APPEND)
      FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
-     ;FileWrite($hFileOpen, _ClipBoard_GetData() & @CRLF);other method paste file contents here
+     $vhandle = _cmdAttachConsole($waltonPID)
+     $output = _CmdGetText($vhandle)
+     FileWrite($hFileOpen, $output & @CRLF)     
      FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
      FileClose($hfileOpen)
 EndFunc
@@ -114,7 +118,7 @@ EndFunc
 ;rewrite to accept array of pids as input to kill -- or associated ports
 ; close all the processes the script opened not including itself
 Func _closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
-     ProcessClose("walton.exe");needs to be fixed 
+     ProcessClose('"walton' & $num_walton & '.exe"');needs to be fixed 
      Sleep(100)
      ProcessClose($waltonPID)
      Sleep(100)
@@ -137,7 +141,7 @@ Func _timedEscape()
                If Not $pressed Then
                     ToolTip("Scroll Lock Behind Held Down, Shutting Down")
                     $pressed = 1                    
-                    _writeToFile()
+                    _ConsoleToFile()
                     _closeProcesses()
                     Exit(0)
                EndIf
@@ -151,21 +155,18 @@ Func _timedEscape()
      WEnd
 EndFunc
 
-Func runCmds(); write arrray to contain pid, handle, and also title if necessary
-
+Func runCmds()
      $mingPID = Run($ming_path)
      Sleep(750)
-     $waltonPID = Run($runCMD)
-     sleep(750)
-     $mingHwnd = _GetHwndFromPID($mingPID)
-     $consoleHostHwnd = _GetHwndFromPID($waltonPID)
+     $waltonPID = Run($runCMD)       
+     
 EndFunc ;==>_runCmds() Returns array(s) containing pid/handles of run cmds
 
 ;main(), runs commands, in turn getting PID's and translating them to window handles.
 
    _timedEscape() ;listen for escape key, if pressed run bufferToClip, writeToFile, and _closeProcesses   
 
-   _writeToFile() ; writes clipboard to logfile
+   _ConsoleToFile() ; writes clipboard to logfile
 
    _closeProcesses() ; close all processes started by script
 WEnd
