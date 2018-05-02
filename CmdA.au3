@@ -29,6 +29,13 @@ Global Const $_SMALL_RECT = "short Left; short Top; short Right; short Bottom"
 ;_CmdWaitList
 ; ===============================================================================================================================
 
+;@glyph
+Func FreeConsole()
+    Local $aResult = DllCall("kernel32.dll", "bool", "FreeConsole")
+    If @error Then Return SetError(@error, @extended, False)
+    Return $aResult[0]
+EndFunc   ;==>_WinAPI_FreeConsole
+
 ; #FUNCTION# ====================================================================================================================
 ; Name...........: _CmdGetWindow
 ; Description ...: Locates the window handle for a given Command Prompt process.

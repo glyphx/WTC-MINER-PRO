@@ -50,7 +50,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 
 _SingleScript() ;prevents more than one instance from running.
 
-Global Const $LOOP_SIZE_IN_MIN = 30000                 ;change the time of the main loop here.
+Global Const $LOOP_SIZE_IN_MIN = 1               ;change the time of the main loop here.
 Global Const $WORKING_DIR = "C:\"                     ;installation folders root path
 Global Const $FOLDER_NAME = "WALTON-GPU-64"         ;name of folder containing walton.exe
 Global Const $NUM_GPUS = 1                          ;set the number of gpu's
@@ -70,7 +70,7 @@ Global $maxPeers = "50"
 Global $num_walton = '1'
 
 Global $runCMD = @COMSPEC _
-& ' /k walton' & $num_walton _
+& ' /c walton' & $num_walton _
 & ' --maxpeers ' & $maxPeers _
 & ' --port ' & $pPort _
 & ' --rpcport ' & $rPort & ' console' _
@@ -131,14 +131,21 @@ EndFunc
 ;rewrite to accept array of pids as input to kill -- or associated ports
 ; close all the processes the script opened not including itself
 Func _closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
+     FreeConsole()
      $count = 3
-     While ProcessExists('"walton' & $num_walton & '.exe"')
-          $count = $count - 1
-          sleep(1000)
-          ProcessClose('"walton' & $num_walton & '.exe"');needs to be fixed  
+     $walton_close = 'firstrun'
+     While ProcessExists($waltonPID)          
+          $count = $count -1
+          Sleep(1000)
+          $walton_close = ProcessClose($waltonPID)          
      WEnd
 
-     ProcessClose('"walton' & $num_walton & '.exe"');needs to be fixed      
+     $count = 3
+     While ProcessExists('walton' & $num_walton & '.exe')
+          $count = $count - 1
+          sleep(1000)
+          ProcessClose('walton' & $num_walton & '.exe')
+     WEnd
      $count = 3
      while ProcessExists($mingPID) & $count > 0
           $count = $count - 1
