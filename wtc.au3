@@ -49,6 +49,7 @@ WEnd
 
 Func _runCMDS()
      For $miner = 0 to $NUM_GPUS - 1
+        
         Global $runCMD = @COMSPEC _
         & ' /k walton' & $gpu_path _
         & ' --maxpeers ' & $maxPeers _
@@ -78,7 +79,7 @@ Func _runCMDS()
      $peerPort = "30303"
      $rpcPort = "8545"
      $gpu_path = "1"
-     $working_dir = $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
+     $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
      $ming_path = $working_dir & "GPUMining\ming_run.exe"
 EndFunc ;==>_runCmds()
 
