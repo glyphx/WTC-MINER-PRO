@@ -12,7 +12,7 @@
 
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
 
-Global Const $LOOP_SIZE_IN_MIN = 3         ;change the time of the main loop here.
+Global Const $LOOP_SIZE_IN_MIN = 2        ;change the time of the main loop here.
 Global Const $ROOT_DIR = "C:\"              ;installation folders root path
 Global Const $FOLDER_NAME = "WALTON-GPU-64" ;name of folder containing walton.exe
 Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder inside $FOLDER_NAME that contains ming_run.exe
@@ -28,7 +28,7 @@ Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
 Global $gpuPOW = ' --gpupow'
 Global $peerPort = " 30303"                 ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
 Global $rpcPort = " 8545"                   ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
-Global $maxPeers = "25"                     ;Adjust the amount of maximum peers you can have per miner. 
+Global $maxPeers = "50"                     ;Adjust the amount of maximum peers you can have per miner. 
 Global $pids[$NUM_GPUS][2]
 
 If $hFileOpen = -1 Then
@@ -41,8 +41,8 @@ FileClose($hFileOpen)
 While 1
      ;if first run and not kill procs
      _runCMDS()
-     _timedEscape() ;listen for escape key, if pressed run bufferToClip, writeToFile, and _closeProcesses
-     _ConsoleToFile() ; writes clipboard to logfile
+     _timedEscape() ;listen for escape key, if pressed run: _ConsoleToFile, and _closeProcesses and then exit()
+     _ConsoleToFile() ; writes console buffer to log file
      If $KILL_PROCS = 1 Then
           _closeProcesses() ; close all processes started by script
      EndIf
@@ -67,8 +67,9 @@ Func _runCMDS()
           & $gpuPOW _
 
           $pids[$miner][0] = Run($ming_path)
-          Sleep(1500)
+          ProcessWait(($pids[$miner][0]))
           $pids[$miner][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)
+          ProcessWait($pids[$miner][1])
           If $NUM_GPUS -1 > $miner Then
                $peerPort += 1
                $rpcPort += 1
@@ -127,24 +128,24 @@ Func _closeProcesses() ;rewrite to be more generic so it can be started before m
           $count = 5
           While ProcessExists('walton' & $miner + 1  & '.exe')
                $count = $count - 1
-               sleep(2000)
+               sleep(200)
                ProcessClose('walton' & $miner + 1 & '.exe')
           WEnd
           WinKill('walton' & $miner + 1 & '.exe')
           $count = 5
           while ProcessExists($pids[$miner][1]) & $count > 0
                $count = $count - 1
-               sleep(2000)
+               sleep(200)
                ProcessClose($pids[$miner][1])
           WEnd
           WinKill($pids[$miner][1])
           $count = 5
           while ProcessExists($pids[$miner][0]) & $count > 0
                $count = $count - 1
-               sleep(2000)
+               sleep(200)
                ProcessClose($pids[$miner][0])
           WEnd
-          WinKill($pids[$miner][1])
-     Sleep(2000)
+          WinKill($pids[$miner][0])
+     Sleep(1000)
      Next
 EndFunc
