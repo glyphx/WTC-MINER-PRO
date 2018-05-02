@@ -8,19 +8,19 @@ C:\Walton-GPU-641
 C:\Walton-GPU-642
 C:\Walton-GPU-643 etc
 
-Walton-GPU-641/
-├── genesis.json
-├── GPUMing_v0.2
-│   ├── 0202001         
-│   ├── cudart32_80.dll
-│   ├── cudart64_80.dll
-│   ├── ming_run.iobj
-│   ├── ming_run.ipdb
-│   ├── ming_run.pdb│   
-├── pthreadVC2.dll
-├── readme.txt
-├── start_gpu.bat
-└── walton1.exe
+Walton-GPU-641/                                                              
+├── genesis.json                                                             
+├── GPUMing_v0.2                                                             
+│   ├── 0202001                                                              
+│   ├── cudart32_80.dll                                                      
+│   ├── cudart64_80.dll                                                      
+│   ├── ming_run.iobj                                                        
+│   ├── ming_run.ipdb                                                        
+│   ├── ming_run.pdb                                                         
+├── pthreadVC2.dll                                                           
+├── readme.txt                                                               
+├── start_gpu.bat                                                                                                                                 
+└── walton1.exe                                                                                
 
 Walton.exe should also be renamed to walton 1, walton 2, etc.
 
