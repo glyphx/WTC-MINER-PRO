@@ -24,13 +24,10 @@ Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
 Global $log_path = $working_dir & "log.txt"
 Global $ming_path = $working_dir & "GPUMining\ming_run.exe"
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
-Global $waltonPID = 0
-Global $mingPID = 0
 Global $gpuPOW = ' --gpupow'
 Global $peerPort = " 30304"
 Global $rpcPort = " 8546"
 Global $maxPeers = "50"
-Global $num_walton = '1'
 Global $pids[$NUM_GPUS][2]
 
 Global $runCMD = @COMSPEC _
@@ -129,6 +126,5 @@ Func _closeProcesses() ;rewrite to be more generic so it can be started before m
                ProcessClose('walton' & $miner + 1 & '.exe')
           WEnd
           Sleep(100)
-     Next
-         
+     Next         
 EndFunc
