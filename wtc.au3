@@ -12,7 +12,7 @@
 
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
 
-Global Const $LOOP_SIZE_IN_MIN = 2        ;change the time of the main loop here.
+Global Const $LOOP_SIZE_IN_MIN = 120        ;change the time of the main loop here.
 Global Const $ROOT_DIR = "C:\"              ;installation folders root path
 Global Const $FOLDER_NAME = "WALTON-GPU-64" ;name of folder containing walton.exe
 Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder inside $FOLDER_NAME that contains ming_run.exe
