@@ -12,7 +12,7 @@
 
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
 
-Global Const $LOOP_SIZE_IN_MIN = 60         ;change the time of the main loop here.
+Global Const $LOOP_SIZE_IN_MIN = 3         ;change the time of the main loop here.
 Global Const $ROOT_DIR = "C:\"              ;installation folders root path
 Global Const $FOLDER_NAME = "WALTON-GPU-64" ;name of folder containing walton.exe
 Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder inside $FOLDER_NAME that contains ming_run.exe
@@ -67,7 +67,7 @@ Func _runCMDS()
           & $gpuPOW _
 
           $pids[$miner][0] = Run($ming_path)
-          Sleep(750)
+          Sleep(1500)
           $pids[$miner][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)
           If $NUM_GPUS -1 > $miner Then
                $peerPort += 1
@@ -124,26 +124,27 @@ EndFunc
 ; close all the processes the script opened not including itself
 Func _closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
      For $miner = 0 to $NUM_GPUS - 1
-          $count = 3
+          $count = 5
           While ProcessExists('walton' & $miner + 1  & '.exe')
                $count = $count - 1
-               sleep(1000)
+               sleep(2000)
                ProcessClose('walton' & $miner + 1 & '.exe')
           WEnd
-
-          $count = 3
+          WinKill('walton' & $miner + 1 & '.exe')
+          $count = 5
           while ProcessExists($pids[$miner][1]) & $count > 0
                $count = $count - 1
-               sleep(1000)
+               sleep(2000)
                ProcessClose($pids[$miner][1])
           WEnd
-
-          $count = 3
+          WinKill($pids[$miner][1])
+          $count = 5
           while ProcessExists($pids[$miner][0]) & $count > 0
                $count = $count - 1
-               sleep(1000)
+               sleep(2000)
                ProcessClose($pids[$miner][0])
           WEnd
-
+          WinKill($pids[$miner][1])
+     Sleep(2000)
      Next
 EndFunc
