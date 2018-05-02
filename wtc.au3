@@ -48,19 +48,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 #include <_SingleScript.au3>
 #include <Clipboard.au3>
 
-_SingleScript() ;prevents more than one instance from running.
+_SingleScript() ;prevents more than one instance from running, the newer instance overwrites the old.
 
-Global Const $LOOP_SIZE_IN_MIN = 1               ;change the time of the main loop here.
-Global Const $WORKING_DIR = "C:\"                     ;installation folders root path
+Global Const $LOOP_SIZE_IN_MIN = 1                  ;change the time of the main loop here.
+Global Const $ROOT_DIR = "C:\"                      ;installation folders root path
 Global Const $FOLDER_NAME = "WALTON-GPU-64"         ;name of folder containing walton.exe
 Global Const $NUM_GPUS = 1                          ;set the number of gpu's
-Global Const $first_run = 0
+Global $kill_procs = 1                              ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
+Global Const $first_run = 0                         ;However, if you have a hard time aquiring peers, you might want to set kill_procs to 0.
 Global $gpu_path = '1\'
-Global $log_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "log.txt"
-Global $ming_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "GPUMining\ming_run.exe"
+Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path
+Global $log_path = $working_dir & "log.txt"
+Global $ming_path = $working_dir & "GPUMining\ming_run.exe"
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
-Global $pressed = 0
-Global $hTimer = 0
 Global $waltonPID = 0
 Global $mingPID = 0
 Global $gpuPOW = ' --gpupow'
@@ -68,6 +68,7 @@ Global $pPort = " 30304"
 Global $rPort = " 8546"
 Global $maxPeers = "50"
 Global $num_walton = '1'
+
 
 Global $runCMD = @COMSPEC _
 & ' /c walton' & $num_walton _
@@ -84,10 +85,9 @@ Global $runCMD = @COMSPEC _
 & ' --mine' _
 & $gpuPOW _
 
-
 If $hFileOpen = -1 Then
      MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install "
-     & "path matches the configuration. Make sure you're able to open a new file @ " & $WORKING_DIR & ".")
+     & "path matches the configuration. Make sure you're able to open a new file @ " & $ROOT_DIR & ".")
      Return False
 EndIf
 FileClose($hFileOpen)
@@ -96,26 +96,39 @@ While 1
      _runCMDS()
      _timedEscape() ;listen for escape key, if pressed run bufferToClip, writeToFile, and _closeProcesses   
      _ConsoleToFile() ; writes clipboard to logfile
-     _closeProcesses() ; close all processes started by script
+     If $kill_procs = 1 Then
+          _closeProcesses() ; close all processes started by script
+     EndIf
 WEnd
 
-;Function for getting HWND from PID
-Func _GetHwndFromPID($PID)
-     $hWnd = 0
-     $winlist = WinList()
-     Do
-          For $i = 1 To $winlist[0][0]
-               If $winlist[$i][0] <> "" Then
-                    $iPID2 = WinGetProcess($winlist[$i][1])
-                    If $iPID2 = $PID Then
-                         $hWnd = $winlist[$i][1]
-                         ExitLoop
-                    EndIf
+Func _runCMDS()
+     Global $mingPID = Run($ming_path)
+     Sleep(750)
+     $waltonPID = Run($runCMD,$working_dir,@SW_SHOW)                
+EndFunc ;==>_runCmds() Returns array(s) containing pid/handles of run cmds
+
+; waiting to capture scroll lock, log, and quit.
+Func _timedEscape()
+     $pressed = 0
+     $hTimer = TimerInit()
+     While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 60000))
+          If _IsPressed("91") Then ;is scroll lock pressed
+               If Not $pressed Then
+                    ToolTip("Scroll Lock Behind Held Down, Shutting Down")
+                    $pressed = 1                    
+                    _ConsoleToFile()
+                    _closeProcesses()
+                    Exit(0)
                EndIf
-          Next
-     Until $hWnd <> 0
-     Return $hWnd
- EndFunc;==>_GetHwndFromPID
+          Else
+               If $pressed Then
+                    ToolTip("")
+                    $pressed = 0
+               EndIf
+          EndIf
+     Sleep(250)
+     WEnd
+EndFunc
 
 ;open a file, grab handle to console buffer, print to file.
 Func _ConsoleToFile()
@@ -154,35 +167,3 @@ Func _closeProcesses() ;rewrite to be more generic so it can be started before m
      WEnd
      Sleep(100)
 EndFunc
-
-; waiting to capture scroll lock, log, and quit.
-Func _timedEscape()
-     $pressed = 0
-     $hTimer = TimerInit()
-     While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 5000))
-          If _IsPressed("91") Then ;is scroll lock pressed
-               If Not $pressed Then
-                    ToolTip("Scroll Lock Behind Held Down, Shutting Down")
-                    $pressed = 1                    
-                    _ConsoleToFile()
-                    _closeProcesses()
-                    Exit(0)
-               EndIf
-          Else
-               If $pressed Then
-                    ToolTip("")
-                    $pressed = 0
-               EndIf
-          EndIf
-     Sleep(250)
-     WEnd
-EndFunc
-
-Func _runCMDS()
-     Global $mingPID = Run($ming_path)
-     MsgBox(0,"",$mingPID)
-     Sleep(750)
-     $waltonPID = Run($runCMD,$WORKING_DIR & $FOLDER_NAME & $gpu_path,@SW_SHOW)  
-     MsgBox(0,"",$waltonPID)          
-EndFunc ;==>_runCmds() Returns array(s) containing pid/handles of run cmds
-
