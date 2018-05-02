@@ -101,14 +101,16 @@ EndFunc
 
 ;open a file, grab handle to console buffer, print to file.
 Func _ConsoleToFile()
-     $hFileOpen = FileOpen($log_path, $FO_APPEND)
-     FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
-     $vhandle = _cmdAttachConsole($pids[0][1])
-     $output = _CmdGetText($vhandle)
-     FreeConsole() 
-     FileWrite($hFileOpen, $output & @CRLF)     
-     FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
-     FileClose($hfileOpen)
+     For $miner = 0 to $NUM_GPUS - 1
+          $hFileOpen = FileOpen($log_path, $FO_APPEND)
+          FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
+          $vhandle = _cmdAttachConsole($pids[$miner][1])
+          $output = _CmdGetText($vhandle)
+          FreeConsole() 
+          FileWrite($hFileOpen, $output & @CRLF)     
+          FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
+          FileClose($hfileOpen)
+     Next
 EndFunc
 
 ;rewrite to accept array of pids as input to kill -- or associated ports
