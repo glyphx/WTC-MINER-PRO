@@ -31,7 +31,7 @@ Global $maxPeers = "50"
 Global $pids[$NUM_GPUS][2]
 
 Global $runCMD = @COMSPEC _
-& ' /c walton' & $num_walton _
+& ' /c walton' & $gpu_path _
 & ' --maxpeers ' & $maxPeers _
 & ' --port ' & $peerPort _
 & ' --rpcport ' & $rpcPort & ' console' _
@@ -53,6 +53,7 @@ EndIf
 FileClose($hFileOpen)
 
 While 1
+     ;if first run and not kill procs
      _runCMDS()
      _timedEscape() ;listen for escape key, if pressed run bufferToClip, writeToFile, and _closeProcesses   
      _ConsoleToFile() ; writes clipboard to logfile
@@ -69,7 +70,8 @@ Func _runCMDS()
      If $NUM_GPUS -1 > $miner Then
           $peerPort += 1
           $rpcPort += 1
-          $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path += 1 & '\'
+          $gpu_path += 1
+          $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
      EndIf
      Next             
 EndFunc ;==>_runCmds() 
