@@ -12,7 +12,7 @@
 
 _SingleScript() ;prevents more than one instance from running, the newer instance overwrites the old.
 
-Global Const $LOOP_SIZE_IN_MIN = 1                  ;change the time of the main loop here.
+Global Const $LOOP_SIZE_IN_MIN = 60                  ;change the time of the main loop here.
 Global Const $ROOT_DIR = "C:\"                      ;installation folders root path
 Global Const $FOLDER_NAME = "WALTON-GPU-64"         ;name of folder containing walton.exe
 Global Const $NUM_GPUS = 2                          ;set the number of gpu's
@@ -48,24 +48,24 @@ While 1
 WEnd
 
 Func _runCMDS()
-     For $miner = 0 to $NUM_GPUS - 1
+    For $miner = 0 to $NUM_GPUS - 1
         
-        Global $runCMD = @COMSPEC _
-        & ' /k walton' & $gpu_path _
-        & ' --maxpeers ' & $maxPeers _
-        & ' --port ' & $peerPort _
-        & ' --rpcport ' & $rpcPort & ' console' _
-        & ' --identity "development"' _
-        & ' --rpc --rpcaddr 127.0.0.1' _
-        & ' --rpccorsdomain "*"' _
-        & ' --rpcapi "admin,personal,db,eth,net,web3,miner"' _
-        & ' --datadir "node1"' _
-        & ' --ipcdisable' _
-        & ' --networkid 999' _
-        & ' --mine' _
-        & $gpuPOW _
+          Global $runCMD = @COMSPEC _
+          & ' /k walton' & $gpu_path _
+          & ' --maxpeers ' & $maxPeers _
+          & ' --port ' & $peerPort _
+          & ' --rpcport ' & $rpcPort & ' console' _
+          & ' --identity "development"' _
+          & ' --rpc --rpcaddr 127.0.0.1' _
+          & ' --rpccorsdomain "*"' _
+          & ' --rpcapi "admin,personal,db,eth,net,web3,miner"' _
+          & ' --datadir "node1"' _
+          & ' --ipcdisable' _
+          & ' --networkid 999' _
+          & ' --mine' _
+          & $gpuPOW _
 
-		  $pids[$miner][0] = Run($ming_path)
+		$pids[$miner][0] = Run($ming_path)
           Sleep(750)
           $pids[$miner][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)
           If $NUM_GPUS -1 > $miner Then
@@ -76,39 +76,39 @@ Func _runCMDS()
 			   $ming_path = $working_dir & "GPUMining\ming_run.exe"
           EndIf
      Next
-     $peerPort = "30303"
-     $rpcPort = "8545"
-     $gpu_path = "1"
-     $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
-     $ming_path = $working_dir & "GPUMining\ming_run.exe"
+    $peerPort = "30303"
+    $rpcPort = "8545"
+    $gpu_path = "1"
+    $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
+    $ming_path = $working_dir & "GPUMining\ming_run.exe"
 EndFunc ;==>_runCmds()
 
 ; waiting to capture scroll lock, log, and quit.
 Func _timedEscape()
-     $pressed = 0
-     $hTimer = TimerInit()
-     While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 60000))
-          If _IsPressed("91") Then ;is scroll lock pressed
-               If Not $pressed Then
-                    ToolTip("Scroll Lock Behind Held Down, Shutting Down")
-                    $pressed = 1
-                    _ConsoleToFile()
-                    _closeProcesses()
-                    Exit(0)
-               EndIf
-          Else
-               If $pressed Then
-                    ToolTip("")
-                    $pressed = 0
-               EndIf
-          EndIf
-     Sleep(250)
-     WEnd
+    $pressed = 0
+    $hTimer = TimerInit()
+    While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 60000))
+        If _IsPressed("91") Then ;is scroll lock pressed
+            If Not $pressed Then
+               ToolTip("Scroll Lock Behind Held Down, Shutting Down")
+               $pressed = 1
+               _ConsoleToFile()
+               _closeProcesses()
+               Exit(0)
+            EndIf
+        Else
+            If $pressed Then
+                ToolTip("")
+                $pressed = 0
+            EndIf
+        EndIf
+        Sleep(250)
+    WEnd
 EndFunc
 
 ;open a file, grab handle to console buffer of walton.exe, print to file.
 Func _ConsoleToFile()
-     For $miner = 0 to $NUM_GPUS - 1
+    For $miner = 0 to $NUM_GPUS - 1
           $hFileOpen = FileOpen($log_path, $FO_APPEND)
           FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
           $vhandle = _cmdAttachConsole($pids[$miner][1])
@@ -117,7 +117,7 @@ Func _ConsoleToFile()
           FileWrite($hFileOpen, $output & @CRLF)
           FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
           FileClose($hfileOpen)
-     Next
+    Next
 EndFunc
 
 ; close all the processes the script opened not including itself
