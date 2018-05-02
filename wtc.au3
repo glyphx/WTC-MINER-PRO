@@ -10,19 +10,20 @@
 #include <_SingleScript.au3>
 #include <Clipboard.au3>
 
-_SingleScript() ;prevents more than one instance from running, the newer instance overwrites the old.
+_SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
 
-Global Const $LOOP_SIZE_IN_MIN = 60                  ;change the time of the main loop here.
-Global Const $ROOT_DIR = "C:\"                      ;installation folders root path
-Global Const $FOLDER_NAME = "WALTON-GPU-64"         ;name of folder containing walton.exe
-Global Const $NUM_GPUS = 2                          ;set the number of gpu's
-Global Const $KILL_PROCS = 1                        ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
-Global Const $first_run = 0                         ;However, if you have a hard time aquiring peers, you might want to set kill_procs to 0.
-Global Const $SHOW_WINDOW = @SW_SHOW                ;change to @SW_HIDE to change to hidden windows.
+Global Const $LOOP_SIZE_IN_MIN = 60         ;change the time of the main loop here.
+Global Const $ROOT_DIR = "C:\"              ;installation folders root path
+Global Const $FOLDER_NAME = "WALTON-GPU-64" ;name of folder containing walton.exe
+Global Const $MING_FOLDER_NAME = "GPUMing_v0.2"
+Global Const $NUM_GPUS = 3                  ;set the number of gpu's
+Global Const $KILL_PROCS = 1                ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
+Global Const $first_run = 0                 ;However, if you have a hard time aquiring peers, you might want to set kill_procs to 0.
+Global Const $SHOW_WINDOW = @SW_SHOW        ;change to @SW_HIDE to change to hidden windows.
 Global $gpu_path = '1'
 Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
 Global $log_path = $working_dir & "log.txt"
-Global $ming_path = $working_dir & "GPUMining\ming_run.exe"
+Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
 Global $gpuPOW = ' --gpupow'
 Global $peerPort = " 30303"
@@ -49,7 +50,7 @@ WEnd
 
 Func _runCMDS()
     For $miner = 0 to $NUM_GPUS - 1
-        
+
           Global $runCMD = @COMSPEC _
           & ' /k walton' & $gpu_path _
           & ' --maxpeers ' & $maxPeers _
@@ -65,7 +66,7 @@ Func _runCMDS()
           & ' --mine' _
           & $gpuPOW _
 
-		$pids[$miner][0] = Run($ming_path)
+          $pids[$miner][0] = Run($ming_path)
           Sleep(750)
           $pids[$miner][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)
           If $NUM_GPUS -1 > $miner Then
@@ -73,14 +74,14 @@ Func _runCMDS()
                $rpcPort += 1
                $gpu_path += 1
                $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
-			   $ming_path = $working_dir & "GPUMining\ming_run.exe"
+               $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
           EndIf
      Next
-    $peerPort = "30303"
-    $rpcPort = "8545"
-    $gpu_path = "1"
-    $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
-    $ming_path = $working_dir & "GPUMining\ming_run.exe"
+     $peerPort = "30303"
+     $rpcPort = "8545"
+     $gpu_path = "1"
+     $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
+     $ming_path = $working_dir & "GPUMining\ming_run.exe"
 EndFunc ;==>_runCmds()
 
 ; waiting to capture scroll lock, log, and quit.
@@ -88,21 +89,21 @@ Func _timedEscape()
     $pressed = 0
     $hTimer = TimerInit()
     While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 60000))
-        If _IsPressed("91") Then ;is scroll lock pressed
-            If Not $pressed Then
-               ToolTip("Scroll Lock Behind Held Down, Shutting Down")
-               $pressed = 1
-               _ConsoleToFile()
-               _closeProcesses()
-               Exit(0)
-            EndIf
-        Else
-            If $pressed Then
-                ToolTip("")
-                $pressed = 0
-            EndIf
-        EndIf
-        Sleep(250)
+          If _IsPressed("91") Then ;is scroll lock pressed
+               If Not $pressed Then
+                    ToolTip("Scroll Lock Behind Held Down, Shutting Down")
+                    $pressed = 1
+                    _ConsoleToFile()
+                    _closeProcesses()
+                    Exit(0)
+               EndIf
+          Else
+               If $pressed Then
+                    ToolTip("")
+                    $pressed = 0
+               EndIf
+          EndIf
+     Sleep(250)
     WEnd
 EndFunc
 
@@ -129,20 +130,20 @@ Func _closeProcesses() ;rewrite to be more generic so it can be started before m
                sleep(1000)
                ProcessClose('walton' & $miner + 1 & '.exe')
           WEnd
-          
+
           $count = 3
           while ProcessExists($pids[$miner][1]) & $count > 0
                $count = $count - 1
                sleep(1000)
                ProcessClose($pids[$miner][1])
           WEnd
-                   
+
           $count = 3
           while ProcessExists($pids[$miner][0]) & $count > 0
                $count = $count - 1
                sleep(1000)
                ProcessClose($pids[$miner][0])
           WEnd
-           
+
      Next
 EndFunc
