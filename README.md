@@ -16,7 +16,7 @@ Walton-GPU-641/
 │   ├── cudart64_80.dll                                                      
 │   ├── ming_run.iobj                                                        
 │   ├── ming_run.ipdb                                                        
-│   ├── ming_run.pdb                                                         
+│   ├── ming_run.pdb                                                
 ├── pthreadVC2.dll                                                           
 ├── readme.txt                                                               
 ├── start_gpu.bat                                                                                                                                 
