@@ -40,33 +40,50 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 #include <Array.au3>
 #include <AutoItConstants.au3>
 #include <CmdA.au3>
+#include <Date.au3>
 #include <FileConstants.au3>
 #include <Misc.au3>
 #include <MsgBoxConstants.au3>
 #include <WinAPIFiles.au3>
 #include <_SingleScript.au3>
+#include <Clipboard.au3>
 
 _SingleScript() ;prevents more than one instance from running.
 
-Global Const $LOOP_SIZE_IN_MIN = 60                 ;change the time of the main loop here.
+Global Const $LOOP_SIZE_IN_MIN = 30000                 ;change the time of the main loop here.
 Global Const $WORKING_DIR = "C:\"                     ;installation folders root path
 Global Const $FOLDER_NAME = "WALTON-GPU-64"         ;name of folder containing walton.exe
 Global Const $NUM_GPUS = 1                          ;set the number of gpu's
 Global Const $first_run = 0
 Global $gpu_path = '1\'
-Global $log_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "\log.txt"
-Global $ming_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "\ming_run.exe"
+Global $log_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "log.txt"
+Global $ming_path = $WORKING_DIR & $FOLDER_NAME & $gpu_path & "GPUMining\ming_run.exe"
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
 Global $pressed = 0
 Global $hTimer = 0
 Global $waltonPID = 0
+Global $mingPID = 0
 Global $gpuPOW = ' --gpupow'
-Global $pPort = "30304"
-Global $rPort = "8546"
+Global $pPort = " 30304"
+Global $rPort = " 8546"
 Global $maxPeers = "50"
 Global $num_walton = '1'
 
-Global $runCMD = @COMSPEC  & ' /k walton' & $num_walton  & ' --identity "development"' & ' --rpc --rpcaddr 127.0.0.1' & ' --rpccorsdomain "*"' & ' --rpcapi "admin,personal,db,eth,net,web3,miner"' & ' --rpcport ' & $rPort & ' console' & ' --datadir "node1"'  & ' --port ' & $pPort & ' --ipcdisable' & ' --networkid 999' & ' --maxpeers ' & $maxPeers & ' --mine' & $gpuPOW 
+Global $runCMD = @COMSPEC _
+& ' /k walton' & $num_walton _
+& ' --maxpeers ' & $maxPeers _
+& ' --port ' & $pPort _
+& ' --rpcport ' & $rPort & ' console' _
+& ' --identity "development"' _
+& ' --rpc --rpcaddr 127.0.0.1' _
+& ' --rpccorsdomain "*"' _
+& ' --rpcapi "admin,personal,db,eth,net,web3,miner"' _
+& ' --datadir "node1"' _
+& ' --ipcdisable' _
+& ' --networkid 999' _
+& ' --mine' _
+& $gpuPOW _
+
 
 If $hFileOpen = -1 Then
      MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install "
@@ -114,13 +131,19 @@ EndFunc
 ;rewrite to accept array of pids as input to kill -- or associated ports
 ; close all the processes the script opened not including itself
 Func _closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
-     ProcessClose('"walton' & $num_walton & '.exe"');needs to be fixed 
-     ProcessClose($waltonPID)
+     $count = 3
+     While ProcessExists('"walton' & $num_walton & '.exe"')
+          $count = $count - 1
+          sleep(1000)
+          ProcessClose('"walton' & $num_walton & '.exe"');needs to be fixed  
+     WEnd
+
+     ProcessClose('"walton' & $num_walton & '.exe"');needs to be fixed      
      $count = 3
      while ProcessExists($mingPID) & $count > 0
           $count = $count - 1
           sleep(1000)
-          WinKill($mingPID)
+          ProcessClose($mingPID)
      WEnd
      Sleep(100)
 EndFunc
@@ -129,7 +152,7 @@ EndFunc
 Func _timedEscape()
      $pressed = 0
      $hTimer = TimerInit()
-     While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 60000))
+     While (TimerDiff($hTimer) < ($LOOP_SIZE_IN_MIN * 5000))
           If _IsPressed("91") Then ;is scroll lock pressed
                If Not $pressed Then
                     ToolTip("Scroll Lock Behind Held Down, Shutting Down")
@@ -149,7 +172,8 @@ Func _timedEscape()
 EndFunc
 
 Func _runCMDS()
-     $mingPID = Run($ming_path)
+     Global $mingPID = Run($ming_path)
+     MsgBox(0,"",$mingPID)
      Sleep(750)
      $waltonPID = Run($runCMD,$WORKING_DIR & $FOLDER_NAME & $gpu_path,@SW_SHOW)  
      MsgBox(0,"",$waltonPID)          
