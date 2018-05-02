@@ -1,3 +1,4 @@
+
 #include <Array.au3>
 #include <AutoItConstants.au3>
 #include <CmdA.au3>
@@ -18,24 +19,25 @@ Global Const $NUM_GPUS = 1                          ;set the number of gpu's
 Global Const $KILL_PROCS = 1                        ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
 Global Const $first_run = 0                         ;However, if you have a hard time aquiring peers, you might want to set kill_procs to 0.
 Global Const $SHOW_WINDOW = @SW_SHOW                ;change to @SW_HIDE to change to hidden windows.
-Global $gpu_path = '1\'
-Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path
+Global $gpu_path = '1'
+Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
 Global $log_path = $working_dir & "log.txt"
 Global $ming_path = $working_dir & "GPUMining\ming_run.exe"
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
 Global $waltonPID = 0
 Global $mingPID = 0
 Global $gpuPOW = ' --gpupow'
-Global $pPort = " 30304"
-Global $rPort = " 8546"
+Global $peerPort = " 30304"
+Global $rpcPort = " 8546"
 Global $maxPeers = "50"
 Global $num_walton = '1'
+Global $pids[$NUM_GPUS][2]
 
 Global $runCMD = @COMSPEC _
 & ' /c walton' & $num_walton _
 & ' --maxpeers ' & $maxPeers _
-& ' --port ' & $pPort _
-& ' --rpcport ' & $rPort & ' console' _
+& ' --port ' & $peerPort _
+& ' --rpcport ' & $rpcPort & ' console' _
 & ' --identity "development"' _
 & ' --rpc --rpcaddr 127.0.0.1' _
 & ' --rpccorsdomain "*"' _
@@ -62,11 +64,18 @@ While 1
      EndIf
 WEnd
 
-Func _runCMDS()
-     $mingPID = Run($ming_path)
+Func _runCMDS()     
+     For $miner = 0 to $NUM_GPUS - 1
+     $pids[$miner][0] = Run($ming_path)
      Sleep(750)
-     $waltonPID = Run($runCMD,$working_dir,$SHOW_WINDOW)                
-EndFunc ;==>_runCmds() Returns array(s) containing pid/handles of run cmds
+     $pids[$miner][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)   
+     If $NUM_GPUS -1 > $miner Then
+          $peerPort += 1
+          $rpcPort += 1
+          $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path += 1 & '\'
+     EndIf
+     Next             
+EndFunc ;==>_runCmds() 
 
 ; waiting to capture scroll lock, log, and quit.
 Func _timedEscape()
@@ -95,8 +104,9 @@ EndFunc
 Func _ConsoleToFile()
      $hFileOpen = FileOpen($log_path, $FO_APPEND)
      FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
-     $vhandle = _cmdAttachConsole($waltonPID)
+     $vhandle = _cmdAttachConsole($pids[0][1])
      $output = _CmdGetText($vhandle)
+     FreeConsole() 
      FileWrite($hFileOpen, $output & @CRLF)     
      FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
      FileClose($hfileOpen)
@@ -105,26 +115,20 @@ EndFunc
 ;rewrite to accept array of pids as input to kill -- or associated ports
 ; close all the processes the script opened not including itself
 Func _closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
-     FreeConsole()
-     $count = 3
-     $walton_close = 'firstrun'
-     While ProcessExists($waltonPID)          
-          $count = $count -1
-          Sleep(1000)
-          $walton_close = ProcessClose($waltonPID)          
-     WEnd
-
-     $count = 3
-     While ProcessExists('walton' & $num_walton & '.exe')
-          $count = $count - 1
-          sleep(1000)
-          ProcessClose('walton' & $num_walton & '.exe')
-     WEnd
-     $count = 3
-     while ProcessExists($mingPID) & $count > 0
-          $count = $count - 1
-          sleep(1000)
-          ProcessClose($mingPID)
-     WEnd
-     Sleep(100)
+     For $miner = 0 to $NUM_GPUS - 1
+          $count = 3      
+          while ProcessExists($pids[$miner][0]) & $count > 0
+               $count = $count - 1
+               sleep(1000)
+               ProcessClose($pids[$miner][0])
+          WEnd
+           $count = 3
+          While ProcessExists('walton' & $miner + 1  & '.exe')          
+               $count = $count - 1
+               sleep(1000)
+               ProcessClose('walton' & $miner + 1 & '.exe')
+          WEnd
+          Sleep(100)
+     Next
+         
 EndFunc
