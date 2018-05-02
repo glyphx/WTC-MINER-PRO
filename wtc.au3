@@ -15,7 +15,7 @@ _SingleScript() ;prevents more than one instance from running so long as they sh
 Global Const $LOOP_SIZE_IN_MIN = 60         ;change the time of the main loop here.
 Global Const $ROOT_DIR = "C:\"              ;installation folders root path
 Global Const $FOLDER_NAME = "WALTON-GPU-64" ;name of folder containing walton.exe
-Global Const $MING_FOLDER_NAME = "GPUMing_v0.2"
+Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder inside $FOLDER_NAME that contains ming_run.exe
 Global Const $NUM_GPUS = 3                  ;set the number of gpu's
 Global Const $KILL_PROCS = 1                ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
 Global Const $first_run = 0                 ;However, if you have a hard time aquiring peers, you might want to set kill_procs to 0.
@@ -26,9 +26,9 @@ Global $log_path = $working_dir & "log.txt"
 Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
 Global $gpuPOW = ' --gpupow'
-Global $peerPort = " 30303"
-Global $rpcPort = " 8545"
-Global $maxPeers = "50"
+Global $peerPort = " 30303"                 ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
+Global $rpcPort = " 8545"                   ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
+Global $maxPeers = "25"                     ;Adjust the amount of maximum peers you can have per miner. 
 Global $pids[$NUM_GPUS][2]
 
 If $hFileOpen = -1 Then
