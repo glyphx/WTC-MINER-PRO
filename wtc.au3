@@ -124,17 +124,25 @@ EndFunc
 Func _closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
      For $miner = 0 to $NUM_GPUS - 1
           $count = 3
-          while ProcessExists($pids[$miner][0]) & $count > 0
-               $count = $count - 1
-               sleep(1000)
-               ProcessClose($pids[$miner][0])
-          WEnd
-           $count = 3
           While ProcessExists('walton' & $miner + 1  & '.exe')
                $count = $count - 1
                sleep(1000)
                ProcessClose('walton' & $miner + 1 & '.exe')
           WEnd
-          Sleep(100)
+          
+          $count = 3
+          while ProcessExists($pids[$miner][1]) & $count > 0
+               $count = $count - 1
+               sleep(1000)
+               ProcessClose($pids[$miner][1])
+          WEnd
+                   
+          $count = 3
+          while ProcessExists($pids[$miner][0]) & $count > 0
+               $count = $count - 1
+               sleep(1000)
+               ProcessClose($pids[$miner][0])
+          WEnd
+           
      Next
 EndFunc
