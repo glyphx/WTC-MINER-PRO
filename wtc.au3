@@ -81,7 +81,7 @@ Func _runCMDS()
      $rpcPort = "8545"
      $gpu_path = "1"
      $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
-     $ming_path = $working_dir & "GPUMining\ming_run.exe"
+     Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
 EndFunc ;==>_runCmds()
 
 ; waiting to capture scroll lock, log, and quit.
