@@ -19,10 +19,10 @@ Set $NUM_GPUS at the top of wtc.au3 \
 It should correspond with the number of instances on GPU's you would like to run \
 $NUM_GPU Default Configuration: 1  
 
-[CPU] 
+[CPU] \
 If you want to use CPU, set $NUM_CPU's to 1 in the top of wtc.au3.  \
 $NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)  \
-If using cpu it will be walton1, which means walton2 should point to gpu0 if using CPU + GPU
+If using cpu it will be walton1.exe, which means walton2.exe should point to gpu0 if using CPU + GPU
 
 [DIRECTORY STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG]  
 You have a directory structure of:
@@ -30,7 +30,7 @@ C:\Walton-GPU-641
 C:\Walton-GPU-642
 C:\Walton-GPU-643 
 
-[Example of complicated setup] \
+[EXAMPLE MULTI-GPU AND CPU SETUP] \
 $GPU_NUM = 3 \
 $CPU_NUM = 1 \
 Then, CPU0 is Walton1.exe is on port 30303, and 8545.  GPU0 is walton2.exe on ports 30304, 8546/ GPU1. \
