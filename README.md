@@ -27,8 +27,8 @@ C:\Walton-GPU-643 etc
 
 [EXAMPLE DIRECTORY STRUCTURE]
 C:\
-├── Walton-GPU-641 \
-│   ├── genesis.json \
+├── Walton-GPU-641  \
+│   ├── genesis.json  \  
 │   ├── GPUMing_v0.2  \ 
 │   │   ├── cudart32_80.dll  \
 │   │   ├── cudart64_80.dll  \
@@ -37,9 +37,9 @@ C:\
 │   │   ├── ming_run.ipdb  \ 
 │   │   └── ming_run.pdb  \
 │   ├── log.txt   *Will be created for you*  \
-│   ├── node1   \
+│   ├── node1  \
 │   │   └── keystores  \
-│   │       └── keystore.json *This is optional, you can choose to include the etherbase information at the top of the script* \
+│   │       └── keystore.json *This is optional, you can choose to include the etherbase information at the top of the script*  \
 │   ├── _This miner uses ports 30303 and 8545  \
 │   └── walton1.exe  \
 └── Walton-GPU-642  \ 
@@ -51,7 +51,7 @@ C:\
     ├── log.txt  \
     ├── node1  \
     │   └── keystores  \ 
-    │       └── Keystore.json      \
+    │       └── Keystore.json  \
     ├── This miner uses ports 30304 and 8546  \
     └── walton2.exe  \
 
