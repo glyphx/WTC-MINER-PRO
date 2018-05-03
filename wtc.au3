@@ -125,7 +125,7 @@ Func _runCMDS()
                $gpu_path += 1
                $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
                $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
-               $keystorejson_path = $working_dir & "node1\keystores\"               
+               $keystorejson_path = $working_dir & "node1\keystores\"                            
           EndIf
           
      Next
@@ -135,7 +135,7 @@ Func _runCMDS()
      $gpu_path = "1"
      $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
      $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
-     $keystorejson_path = $working_dir & "node1\keystores\"
+     $keystorejson_path = $working_dir & "node1\keystores\"     
      $first_run = 1   
 EndFunc ;==>_runCmds()
 
@@ -164,12 +164,13 @@ EndFunc;==>_timedEscape()
 
 ;open a file, grab handle to console buffer of walton.exe, print to file.
 Func _ConsoleToFile()
-    For $miner = 0 to $NUM_GPUS - 1
+    For $miner = 0 to $NUM_GPUS + $NUM_CPUS - 1
+          $log_path = $ROOT_DIR & $FOLDER_NAME & $miner + 1 & "\log.txt"
           $hFileOpen = FileOpen($log_path, $FO_APPEND)
           FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
-          $vhandle = _cmdAttachConsole($pids[$miner][1])
-          $output = _CmdGetText($vhandle)
-          FreeConsole()
+          $vhandle = _cmdAttachConsole($pids[$miner][1]) ; attach to console and get handle to buffer
+          $output = _CmdGetText($vhandle) ; kernel call to grab the text from the buffer
+          FreeConsole() ;detatch from the console
           FileWrite($hFileOpen, $output & @CRLF)
           FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
           FileClose($hfileOpen)
