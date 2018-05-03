@@ -17,23 +17,22 @@ Global Const $ROOT_DIR = "C:\"              ;path to folder containing all copie
 Global Const $FOLDER_NAME = "WALTON-GPU-64" ;name of folder(s) inside $ROOT_DIR containing walton.exe
 Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder(s) inside $FOLDER_NAME that contains ming_run.exe
 Global Const $NUM_GPUS = 1                  ;set the number of gpu's
+Global Const $NUM_CPUS = 0                        ;currently can only be 0 or 1
 Global Const $KILL_PROCS = 1                ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
-Global Const $SHOW_WINDOW = @SW_SHOW        ;However, if you have a hard time aquiring peers, you might want to set kill_procs to 0.
-Global Const $etherbase = ""
-                                            ;change to @SW_HIDE to change to hidden windows.
-Global $gpu_path = '1'
-Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
-Global $log_path = $working_dir & "log.txt"
-Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
-Global $hFileOpen = FileOpen($log_path, $FO_APPEND)
-Global $gpuPOW = ' --gpupow'
+Global Const $SHOW_WINDOW = @SW_SHOW       ;However, if you have a hard time aquiring peers, you might want to set kill_procs to 0.
+Global Const $etherbase = ""                     ;change $ SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
+Global $gpu_path = '1'                       ; how miner files are differentiated, don't touch this unless you trace the code to see how it works
+Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'  ;directory we're currently in
+Global $log_path = $working_dir & "log.txt"                       ; yep, you got it, it's the path of the log file we create.
+Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"  ; MING MING MING! 
+Global $gpuPOW = ' --gpupow'                ;tells walton.exe if it is cpu or gpu
 Global $peerPort = " 30303"                 ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
 Global $rpcPort = " 8545"                   ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
 Global $maxPeers = "50"                     ;Adjust the amount of maximum peers you can have per miner. 
-Global $pids[$NUM_GPUS][2]
+Global $pids[$NUM_GPUS][2]                  ;array that stores the process id's of all the walton / mings
 Global $first_run = 1
-Global $NUM_CPUS = 0                        ;currently can only be 0 or 1
 
+Global $hFileOpen = FileOpen($log_path, $FO_APPEND)  ;lets check and see if the log file is going to be at a valid path for miner 1
 If $hFileOpen = -1 Then
      MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install "
      & "path matches the configuration. Make sure you're able to open a new file @ " & $ROOT_DIR & ".")
@@ -41,8 +40,14 @@ If $hFileOpen = -1 Then
 EndIf
 FileClose($hFileOpen)
 
-While 1    
-     _runCMDS()
+While 1
+     If $KILL_PROCS = 1 Then
+          _runCMDS()
+     EndIf
+
+     Else $KILL_PROCS = 0 & $first_run = 0 Then
+          _runCMDS()
+     EndIf
      _timedEscape() ;listen for escape key, if pressed run: _ConsoleToFile, and _closeProcesses and then exit()
      _ConsoleToFile() ; writes console buffer to log file
      If $KILL_PROCS = 1 Then
@@ -55,7 +60,9 @@ Func _runCMDS()
           If $NUM_CPUS <> 0 & $first_run = 1 Then
                $gpuPOW = ""
           EndIf
-
+          ;FileExists($working_dir & "node1\keystores\")
+          ;_WinAPI_PathIsDirectory
+          ;_WinAPI_PathIsDirectoryEmpty
           Global $runCMD = @COMSPEC _
           & ' /k walton' & $gpu_path _
           & ' --maxpeers ' & $maxPeers _
@@ -71,8 +78,12 @@ Func _runCMDS()
           & ' --mine' _
           & $gpuPOW _
 
-          $gpuPOW = "--gpuPOW"
-          $pids[$miner][0] = Run($ming_path)
+          If $NUM_CPUS = 0 Then
+               $pids[$miner][0] = Run($ming_path)
+          
+          Else $NUM_CPUS <> 0 & $first_run = 0 Then
+               $pids[$miner][0] = Run($ming_path)
+          EndIf
           ProcessWait(($pids[$miner][0]))
           $pids[$miner][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)
           ProcessWait($pids[$miner][1])
@@ -88,7 +99,8 @@ Func _runCMDS()
      $rpcPort = "8545"
      $gpu_path = "1"
      $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
-     Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
+     $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
+     $gpuPOW = " --gpuPOW"
      $first_run = 0
 EndFunc ;==>_runCmds()
 
@@ -134,23 +146,23 @@ Func _closeProcesses() ;rewrite to be more generic so it can be started before m
      For $miner = 0 to $NUM_GPUS - 1
           $count = 5
           While ProcessExists('walton' & $miner + 1  & '.exe')
-               $count = $count - 1
-               sleep(200)
+               $count = $count - 1               
                ProcessClose('walton' & $miner + 1 & '.exe')
+               sleep(500)
           WEnd
           WinKill('walton' & $miner + 1 & '.exe')
           $count = 5
           while ProcessExists($pids[$miner][1]) & $count > 0
-               $count = $count - 1
-               sleep(200)
+               $count = $count - 1               
                ProcessClose($pids[$miner][1])
+               sleep(500)
           WEnd
           WinKill($pids[$miner][1])
           $count = 5
           while ProcessExists($pids[$miner][0]) & $count > 0
-               $count = $count - 1
-               sleep(200)
+               $count = $count - 1               
                ProcessClose($pids[$miner][0])
+               sleep(500)
           WEnd
           WinKill($pids[$miner][0])
      Sleep(1000)

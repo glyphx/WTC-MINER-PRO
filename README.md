@@ -1,9 +1,16 @@
 Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
 
 [INSTALLATION]:
-Autoit can be compiled as an .exe (bit faster) or run as a script, feel free to download an .exe in the release section or compile/run it yourself.
+Step 1> Download scripts via .zip, .exe release, or github.  \
+Step 2> *IMPORTANT* Rename folders and walton.exe as described below  \
+Step 3> Configure $NUM_GPU and $NUM_CPU  \
+Step 4> compile and run  \
 
-https://www.autoitscript.com/site/autoit/downloads/ -Downloads page
+[INSTALL AUTOIT IF COMPILING YOURSELF]
+Autoit can be compiled as an .exe (bit faster) or run as a script, feel free to download an .exe in the release section or compile/run it yourself.
+It's easy to compile Autoit, simply right click the wtc.au3 script and select compile (x86), a .exe will be generated.
+
+https://www.autoitscript.com/site/autoit/downloads/ -Downloads page  \
 https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - Setup file
 
 MULTIGPU: The default is setup for 1 GPU, a quick edit at the top to $NUM_GPUS \
