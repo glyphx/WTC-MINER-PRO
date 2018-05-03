@@ -59,8 +59,10 @@ Func _runCMDS()
           If $NUM_CPUS = 1 & $first_run = 1 Then
                $gpuPOW = ""
           EndIf
-          If _WinAPI_PathIsDirectory($keystorejson_path) & _WinAPI_PathIsDirectoryEmpty($keystorejson_path) = False Then
-               $etherbase = ""
+          If _WinAPI_PathIsDirectory($keystorejson_path) = True Then
+               If _WinAPI_PathIsDirectoryEmpty($keystorejson_path) = False Then
+                    $etherbase = ""
+               EndIf
           EndIf
           
           Global $runCMD = @COMSPEC _
