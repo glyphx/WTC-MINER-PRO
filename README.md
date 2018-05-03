@@ -6,19 +6,21 @@ Step 2> *IMPORTANT* Rename first folder to Walton-GPU-641 and walton.exe to walt
 Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 *if you downloaded .exe just run it now* \
 Step 4> compile and run  
 
-[INSTALL AUTOIT IF COMPILING YOURSELF]
+[INSTALL AUTOIT IF COMPILING YOURSELF] \
 For the fastest execution Autoit can be compiled as an .exe, but if autoit is installed it can also be run as a script. 
 Feel free to download an .exe in the release section or compile/run it yourself. \
 It's easy to compile Autoit, simply right click the wtc.au3 script after installing autoit and select compile (x86), an .exe will be generated.
-The .exe's autoit generates are stand alone and do not require autoit to be installed to use. *release section* \
+The .exe's autoit generates are stand alone and do not require autoit to be installed to use. *release section* 
 
 https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - *Direct Download Autoit 32/64*
 
-MULTIGPU: The default is setup for 1 GPU, edit $NUM_GPUS at the top of wtc.au3 \
-set to another value, such as 2,3,4 etc will spawn these extra processes at the corresponding ports.  \
+[MULTIGPU] \
+Set $NUM_GPUS at the top of wtc.au3 \
+It should correspond with the number of instances on GPU's you would like to run \
 $NUM_GPU Default Configuration: 1  
 
-CPU: SET $NUM_CPU's to 1 in the top of wtc.au3.  \
+[CPU] 
+If you want to use CPU, set $NUM_CPU's to 1 in the top of wtc.au3.  \
 $NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)  \
 If using cpu it will be walton1, which means walton2 should point to gpu0 if using CPU + GPU
 
@@ -32,7 +34,7 @@ C:\Walton-GPU-643
 $GPU_NUM = 3 \
 $CPU_NUM = 1 \
 Then, CPU0 is Walton1.exe is on port 30303, and 8545.  GPU0 is walton2.exe on ports 30304, 8546/ GPU1. \
-GPU1 is walton3.exe on port 30305, 8547, and finally GPU2 is walton4.exe, ports 30306, and 8548. \
+GPU1 is walton3.exe on port 30305, 8547, and finally GPU2 is walton4.exe, ports 30306, and 8548. 
 
 [EXAMPLE DIRECTORY STRUCTURE]  \
 C:\  \
