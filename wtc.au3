@@ -10,7 +10,7 @@
 #include <Clipboard.au3>
 
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
-Global Const $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"';if you have a .json keystore file this won't be used. Place your public address here.
+Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"';if you have a .json keystore file this won't be used. Place your public address here.
 Global Const $NUM_GPUS = 1                      ;set the number of gpu's
 Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
 Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
@@ -59,7 +59,7 @@ Func _runCMDS()
           If $NUM_CPUS <> 0 & $first_run = 1 Then
                $gpuPOW = ""
           EndIf
-          If _WinAPI_PathIsDirectory($keystorejson_path) && _WinAPI_PathIsDirectoryEmpty($keystorejson_path) <> 1 Then
+          If _WinAPI_PathIsDirectory($keystorejson_path) & _WinAPI_PathIsDirectoryEmpty($keystorejson_path) <> 1 Then
                $etherbase = ""
           EndIf
           
