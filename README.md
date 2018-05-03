@@ -74,10 +74,10 @@ The script assumes that you have setup your multiGPU setup with ascending ports,
 
 ## [LOGGING AND EXITING] :ledger: :door:
 Press and hold scroll lock untill you see the tool tip change to "Scroll Lock Behind Held Down, Shutting Down", the script will log each miner and exit all processes including itself.
-Another way to exit without logging or closing any of the miners is simply right clicking the .exe/script in the taskbar and selecting quit. \
+Another way to exit without logging or closing any of the miners is simply right clicking the .exe/script in the taskbar and selecting quit. 
 
 
-At the top of wtc.au3 is where all the user options are. Here is a code snippit of the relavent section: \
+At the top of wtc.au3 is where all the user options are. Here is a code snippit of the relavent section: 
 ## -----------------------------CORE USER OPTIONS ---------------------------   
 ```autoit
 'Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'

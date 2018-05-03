@@ -1,3 +1,5 @@
+;@Author : glyph
+;@License : MIT, One should have been included in your copy of the software. If not, you can get one at: https://opensource.org/licenses/MIT
 #include <Array.au3>
 #include <AutoItConstants.au3>
 #include <CmdA.au3>
