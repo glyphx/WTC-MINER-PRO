@@ -1,4 +1,4 @@
-## MultiGPU + CPU Automation for WaltonChain Miner: 1.7.0
+# MultiGPU + CPU Automation for WaltonChain Miner: 1.7.0
 
 ## [INSTALLATION]  :nut_and_bolt:
 
@@ -35,7 +35,7 @@ C:\  \
 │       ├── GPUMing_v0.2
 │       │       ├── cudart32_80.dll  \
 │       │       ├── cudart64_80.dll  \
-│       │       ├── ming_run.exe
+│       │       ├── ming_run.exe *If using CPU this isn't run. If not using CPU this must point to GPU0**   \
 │       │       ├── ming_run.iobj  \
 │       │       ├── ming_run.ipdb
 │       │       └── ming_run.pdb  \
@@ -44,13 +44,13 @@ C:\  \
 │       │      └── keystores  \
 │       │                   └── keystore.json **OPTIONAL, you can choose to include the etherbase information at the top of the script** \
 │       ├── _This miner uses ports 30303 and 8545  \
-│       └── walton1.exe  **If NOT using CPU this points to GPU0**  \
+│       └── walton1.exe  
 └── Walton-GPU-642
          ├── genesis.json  \
          ├── GPUMing_v0.2
          │        ├── cudart32_80.dll  \
          │        ├── cudart64_80.dll  \
-         │        ├── ming_run.exe  \
+         │        ├── ming_run.exe **If using CPU this points to GPU0, if not using CPU this must point to GPU1. \
          ├── log.txt  \
          ├── node1  \
          │      └── keystores
