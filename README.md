@@ -1,25 +1,19 @@
 Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
 
-
-
 [INSTALLATION]:
 Autoit can be compiled as an .exe (bit faster) or run as a script, feel free to download an .exe in the release section or compile/run it yourself.
 
 https://www.autoitscript.com/site/autoit/downloads/ -Downloads page
 https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - Setup file
 
-
-If you want to change the directory default configuration, they can be fairly easily modified at the top of the script.
-
 MULTIGPU: The default is setup for 1 GPU, a quick edit at the top to $NUM_GPUS \
-set to another value, such as 2,3,4 etc will spawn these extra processes at the corresponding ports.
-$NUM_GPU Default Configuration: 1
+set to another value, such as 2,3,4 etc will spawn these extra processes at the corresponding ports.  \
+$NUM_GPU Default Configuration: 1  
 
-CPU: SET $NUM_CPU's to 1 in the top of the script. 
+CPU: SET $NUM_CPU's to 1 in the top of the script.  \
 $NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)
 
-
-[DIRECTORY STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG]: 
+[DIRECTORY STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG]  
 You have a directory structure of:
 C:\Walton-GPU-641
 C:\Walton-GPU-642
