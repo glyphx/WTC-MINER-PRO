@@ -1,4 +1,4 @@
-##### Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
+#### Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
 
 ## [INSTALLATION]  
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
@@ -78,7 +78,7 @@ Another way to exit without logging or closing any of the miners is simply right
 
 
 At the top of wtc.au3 is where all the user options are. Here is a code snippit of the relavent section: \
-## -------------------------CORE USER OPTIONS ------------------------------------------
+## -----------------------------CORE USER OPTIONS ---------------------------   
 ```autoit
 'Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
 ;Directly above is where to set your public wallet address.
