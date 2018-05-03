@@ -17,12 +17,10 @@ Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loo
 Global Const $ROOT_DIR = "C:\"                  ;path to folder containing all copies of $FOLDER_NAME
 Global Const $FOLDER_NAME = "WALTON-GPU-64"     ;name of folder(s) inside $ROOT_DIR containing walton.exe
 Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder(s) inside $FOLDER_NAME that contains ming_run.exe
-
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication. Set to 0 if you have a hard time getting peers.
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $ SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
-
-
 Global $gpu_path = '1' ;how miner files are differentiated, don't touch this unless you trace the code to see how it works
+
 Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'  ;directory we're currently in
 Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of the log file we create.
 Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"  ; MING MING MING! 
@@ -65,6 +63,9 @@ Func _runCMDS()
                $gpuPOW = ''
                EndIf
           EndIf
+          If not _WinAPI_PathIsDirectory($working_dir & "node1\") Then
+               Run(@ComSpec & ' /c walton' & $gpu_path & " --datadir node1 init genesis.json")
+          EndIf               
           If _WinAPI_PathIsDirectory($keystorejson_path) = True Then
                If _WinAPI_PathIsDirectoryEmpty($keystorejson_path) = False Then                    
                     $etherbase = ""
@@ -75,9 +76,9 @@ Func _runCMDS()
           & ' /k walton' & $gpu_path _
           & $etherbase _
           & $gpuPOW _
-          & ' --maxpeers ' & $maxPeers _
           & ' --port ' & $peerPort _
           & ' --rpcport ' & $rpcPort & ' console' _
+          & ' --maxpeers ' & $maxPeers _     
           & ' --identity "development"' _
           & ' --rpc --rpcaddr 127.0.0.1' _
           & ' --rpccorsdomain "*"' _
