@@ -74,19 +74,19 @@ Press and hold scroll lock untill you see the tool tip change to "Scroll Lock Be
 Another way to exit without logging or closing any of the miners is simply right clicking the .exe/script in the taskbar and selecting quit. \
 
 
---->wtc.au3 \
-------------------------------------CORE USER OPTIONS ----------------------------------------------------------------------------------
-Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
-*Directly above is where to set your public wallet address.*
-*If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.*
-*Instead it would use the address of the .json keystore file.*
-Global Const $NUM_GPUS = 1                      ;set the number of gpu's
-Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
-Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
-Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
-;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
-Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
-Global Const $MINER_THREADS = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable.
+At the top of wtc.au3 you will find these options --> \
+------------------------------------CORE USER OPTIONS ----------------------------------------------------------------------------------  \
+' Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"' '
+' *Directly above is where to set your public wallet address.* '
+' *If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.* '
+' *Instead it would use the address of the .json keystore file.* '
+' Global Const $NUM_GPUS = 1                      ;set the number of gpu's '
+' Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1 '
+' Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here. '
+' Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication. '
+' ;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN '
+' Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized. '
+' Global Const $MINER_THREADS = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable. '
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
