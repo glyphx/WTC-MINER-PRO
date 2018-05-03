@@ -32,12 +32,12 @@ C:\  \
 ├── Walton-GPU-641  \
 │       ├── genesis.json  \
 │       ├── GPUMing_v0.2     
-│       │   ├── cudart32_80.dll  \
-│       │   ├── cudart64_80.dll  \
-│       │   ├── ming_run.exe   
-│       │   ├── ming_run.iobj  \
-│       │   ├── ming_run.ipdb   
-│       │   └── ming_run.pdb  \
+│       │        ├── cudart32_80.dll  \
+│       │        ├── cudart64_80.dll  \
+│       │        ├── ming_run.exe   
+│       │        ├── ming_run.iobj  \
+│       │        ├── ming_run.ipdb   
+│       │        └── ming_run.pdb  \
 │       ├── log.txt   *Will be created for you*  \
 │       ├── node1  \
 │       │      └── keystores  \
@@ -47,9 +47,9 @@ C:\  \
 └── Walton-GPU-642   
          ├── genesis.json  \
          ├── GPUMing_v0.2   
-         │   ├── cudart32_80.dll  \
-         │   ├── cudart64_80.dll  \
-         │   ├── ming_run.exe  \
+         │         ├── cudart32_80.dll  \
+         │         ├── cudart64_80.dll  \
+         │         ├── ming_run.exe  \
          ├── log.txt  \
          ├── node1  \
          │      └── keystores   
