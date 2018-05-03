@@ -45,17 +45,17 @@ C:\  \
 │   ├── _This miner uses ports 30303 and 8545  \
 │   └── walton1.exe  *If NOT using CPU this points to GPU0*  \
 └── Walton-GPU-642   
-`` &nbsp; &nbsp;``├── genesis.json  \
-`` &nbsp; &nbsp;``├── GPUMing_v0.2   
-`` &nbsp; &nbsp;``│   ├── cudart32_80.dll  \
-`` &nbsp; &nbsp;``│   ├── cudart64_80.dll  \
-`` &nbsp; &nbsp;``│   ├── ming_run.exe  \
-`` &nbsp; &nbsp;``├── log.txt  \
-`` &nbsp; &nbsp;``── node1  \
-`` &nbsp; &nbsp;``│   └── keystores   
-`` &nbsp; &nbsp;``│       └── Keystore.json  \
-`` &nbsp; &nbsp;``├── This miner uses ports 30304 and 8546  \
-`` &nbsp; &nbsp;``└── walton2.exe  *If using CPU walton2.exe points to gpu0.*
+    ├── genesis.json  \
+    ├── GPUMing_v0.2   
+    │   ├── cudart32_80.dll  \
+    │   ├── cudart64_80.dll  \
+    │   ├── ming_run.exe  \
+    ├── log.txt  \
+    ├── node1  \
+    │   └── keystores   
+    │       └── Keystore.json  \
+    ├── This miner uses ports 30304 and 8546  \
+    └── walton2.exe  *If using CPU walton2.exe points to gpu0.*
 
 [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG]:
 Walton.exe should also be renamed to walton 1, walton 2, etc.
