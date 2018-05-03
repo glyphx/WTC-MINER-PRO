@@ -1,9 +1,9 @@
 Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
 
-[INSTALLATION]:
+[INSTALLATION]  \
 Step 1> Download scripts via .zip, .exe release, or github.  \
-Step 2> *IMPORTANT* Rename folders and walton.exe as described below  \
-Step 3> Configure $NUM_GPU and $NUM_CPU  \
+Step 2> *IMPORTANT* Rename folders and walton.exe to walton1.exe etc as described below  \
+Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3\
 Step 4> compile and run  \
 
 [INSTALL AUTOIT IF COMPILING YOURSELF]

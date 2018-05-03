@@ -11,25 +11,26 @@
 #include <Clipboard.au3>
 
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
-
-Global Const $LOOP_SIZE_IN_MIN = 120        ;change the time of the main loop here.
-Global Const $ROOT_DIR = "C:\"              ;path to folder containing all copies of $FOLDER_NAME
-Global Const $FOLDER_NAME = "WALTON-GPU-64" ;name of folder(s) inside $ROOT_DIR containing walton.exe
+Global Const $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"';if you have a .json keystore file this won't be used. Place your public address here.
+Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
+Global Const $ROOT_DIR = "C:\"                  ;path to folder containing all copies of $FOLDER_NAME
+Global Const $FOLDER_NAME = "WALTON-GPU-64"     ;name of folder(s) inside $ROOT_DIR containing walton.exe
 Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder(s) inside $FOLDER_NAME that contains ming_run.exe
-Global Const $NUM_GPUS = 1                  ;set the number of gpu's
-Global Const $NUM_CPUS = 0                        ;currently can only be 0 or 1
-Global Const $KILL_PROCS = 1                ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
-Global Const $SHOW_WINDOW = @SW_SHOW       ;However, if you have a hard time aquiring peers, you might want to set kill_procs to 0.
-Global Const $etherbase = ""                     ;change $ SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
-Global $gpu_path = '1'                       ; how miner files are differentiated, don't touch this unless you trace the code to see how it works
+Global Const $NUM_GPUS = 1                      ;set the number of gpu's
+Global Const $NUM_CPUS = 0                      ;currently can only be 0 or 1
+Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication. Set to 0 if you have a hard time getting peers.
+Global Const $SHOW_WINDOW = @SW_SHOW  ;change $ SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
+                                          
+Global $gpu_path = '1' ;how miner files are differentiated, don't touch this unless you trace the code to see how it works
 Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'  ;directory we're currently in
-Global $log_path = $working_dir & "log.txt"                       ; yep, you got it, it's the path of the log file we create.
+Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of the log file we create.
 Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"  ; MING MING MING! 
-Global $gpuPOW = ' --gpupow'                ;tells walton.exe if it is cpu or gpu
-Global $peerPort = " 30303"                 ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
-Global $rpcPort = " 8545"                   ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
-Global $maxPeers = "50"                     ;Adjust the amount of maximum peers you can have per miner. 
-Global $pids[$NUM_GPUS][2]                  ;array that stores the process id's of all the walton / mings
+Global $keystorejson_path = $working_dir & "node1\keystores\"
+Global $gpuPOW = ' --gpupow'    ;tells walton.exe if it is cpu or gpu
+Global $peerPort = " 30303"     ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
+Global $rpcPort = " 8545"       ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
+Global $maxPeers = "50"         ;Adjust the amount of maximum peers you can have per miner. 
+Global $pids[$NUM_GPUS][2]      ;array that stores the process id's of all the walton / mings
 Global $first_run = 1
 
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)  ;lets check and see if the log file is going to be at a valid path for miner 1
@@ -42,8 +43,7 @@ FileClose($hFileOpen)
 
 While 1
      If $KILL_PROCS = 1 Then
-          _runCMDS()
-     
+          _runCMDS()     
      Else $KILL_PROCS = 0 & $first_run = 0 Then
           _runCMDS()
      EndIf
@@ -59,9 +59,10 @@ Func _runCMDS()
           If $NUM_CPUS <> 0 & $first_run = 1 Then
                $gpuPOW = ""
           EndIf
-          ;FileExists($working_dir & "node1\keystores\")
-          ;_WinAPI_PathIsDirectory
-          ;_WinAPI_PathIsDirectoryEmpty
+          If _WinAPI_PathIsDirectory($keystorejson_path) && _WinAPI_PathIsDirectoryEmpty($keystorejson_path) <> 1
+               $etherbase = ""
+          EndIf
+          
           Global $runCMD = @COMSPEC _
           & ' /k walton' & $gpu_path _
           & ' --maxpeers ' & $maxPeers _
@@ -76,6 +77,7 @@ Func _runCMDS()
           & ' --networkid 999' _
           & ' --mine' _
           & $gpuPOW _
+          & $etherbase
 
           If $NUM_CPUS = 0 Then
                $pids[$miner][0] = Run($ming_path)
