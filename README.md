@@ -4,7 +4,7 @@ Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
 Step 1> Download scripts via .zip, .exe release, or github.  \
 Step 2> *IMPORTANT* Rename folders and walton.exe to walton1.exe etc as described below  \
 Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3\
-Step 4> compile and run  \
+Step 4> compile and run  
 
 [INSTALL AUTOIT IF COMPILING YOURSELF]
 Autoit can be compiled as an .exe (bit faster) or run as a script, feel free to download an .exe in the release section or compile/run it yourself.
@@ -18,7 +18,8 @@ set to another value, such as 2,3,4 etc will spawn these extra processes at the 
 $NUM_GPU Default Configuration: 1  
 
 CPU: SET $NUM_CPU's to 1 in the top of the script.  \
-$NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)
+$NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)  \
+If using cpu it will be walton1, which means walton2 should point to gpu0 if using CPU + GPU
 
 [DIRECTORY STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG]  
 You have a directory structure of:
@@ -42,7 +43,7 @@ C:\  \
 │   │   └── keystores  \
 │   │       └── keystore.json *This is optional, you can choose to include the etherbase information at the top of the script*  \
 │   ├── _This miner uses ports 30303 and 8545  \
-│   └── walton1.exe  \
+│   └── walton1.exe  *If NOT using CPU this points to GPU0*  \
 └── Walton-GPU-642   
     ├── genesis.json  \
     ├── GPUMing_v0.2   
@@ -54,7 +55,7 @@ C:\  \
     │   └── keystores   
     │       └── Keystore.json  \
     ├── This miner uses ports 30304 and 8546  \
-    └── walton2.exe  
+    └── walton2.exe  *If using CPU walton2.exe points to gpu0.*
 
 [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG]:
 Walton.exe should also be renamed to walton 1, walton 2, etc.
