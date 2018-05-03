@@ -13,13 +13,14 @@
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
 
 Global Const $LOOP_SIZE_IN_MIN = 120        ;change the time of the main loop here.
-Global Const $ROOT_DIR = "C:\"              ;installation folders root path
-Global Const $FOLDER_NAME = "WALTON-GPU-64" ;name of folder containing walton.exe
-Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder inside $FOLDER_NAME that contains ming_run.exe
-Global Const $NUM_GPUS = 3                  ;set the number of gpu's
+Global Const $ROOT_DIR = "C:\"              ;path to folder containing all copies of $FOLDER_NAME
+Global Const $FOLDER_NAME = "WALTON-GPU-64" ;name of folder(s) inside $ROOT_DIR containing walton.exe
+Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder(s) inside $FOLDER_NAME that contains ming_run.exe
+Global Const $NUM_GPUS = 1                  ;set the number of gpu's
 Global Const $KILL_PROCS = 1                ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
-Global Const $first_run = 0                 ;However, if you have a hard time aquiring peers, you might want to set kill_procs to 0.
-Global Const $SHOW_WINDOW = @SW_SHOW        ;change to @SW_HIDE to change to hidden windows.
+Global Const $SHOW_WINDOW = @SW_SHOW        ;However, if you have a hard time aquiring peers, you might want to set kill_procs to 0.
+Global Const $etherbase = ""
+                                            ;change to @SW_HIDE to change to hidden windows.
 Global $gpu_path = '1'
 Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
 Global $log_path = $working_dir & "log.txt"
@@ -30,6 +31,8 @@ Global $peerPort = " 30303"                 ;Start first miner on 30303 and add 
 Global $rpcPort = " 8545"                   ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
 Global $maxPeers = "50"                     ;Adjust the amount of maximum peers you can have per miner. 
 Global $pids[$NUM_GPUS][2]
+Global $first_run = 1
+Global $NUM_CPUS = 0                        ;currently can only be 0 or 1
 
 If $hFileOpen = -1 Then
      MsgBox($MB_SYSTEMMODAL, "", "An error occured opening the log file, make sure install "
@@ -38,8 +41,7 @@ If $hFileOpen = -1 Then
 EndIf
 FileClose($hFileOpen)
 
-While 1
-     ;if first run and not kill procs
+While 1    
      _runCMDS()
      _timedEscape() ;listen for escape key, if pressed run: _ConsoleToFile, and _closeProcesses and then exit()
      _ConsoleToFile() ; writes console buffer to log file
@@ -49,7 +51,10 @@ While 1
 WEnd
 
 Func _runCMDS()
-    For $miner = 0 to $NUM_GPUS - 1
+    For $miner = 0 to $NUM_GPUS - 1 + $NUM_CPUS
+          If $NUM_CPUS <> 0 & $first_run = 1 Then
+               $gpuPOW = ""
+          EndIf
 
           Global $runCMD = @COMSPEC _
           & ' /k walton' & $gpu_path _
@@ -66,6 +71,7 @@ Func _runCMDS()
           & ' --mine' _
           & $gpuPOW _
 
+          $gpuPOW = "--gpuPOW"
           $pids[$miner][0] = Run($ming_path)
           ProcessWait(($pids[$miner][0]))
           $pids[$miner][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)
@@ -83,6 +89,7 @@ Func _runCMDS()
      $gpu_path = "1"
      $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
      Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
+     $first_run = 0
 EndFunc ;==>_runCmds()
 
 ; waiting to capture scroll lock, log, and quit.
