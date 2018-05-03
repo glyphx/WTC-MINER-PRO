@@ -1,12 +1,12 @@
 ##### Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
 
-## [INSTALLATION]  \
+## [INSTALLATION]  
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
 Step 2> *IMPORTANT* Rename first folder to Walton-GPU-641 and walton.exe to walton1.exe, further described below.  \
 Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 *if you downloaded .exe just run it now* \
 Step 4> compile and run  
 
-## [INSTALL AUTOIT IF COMPILING YOURSELF] \
+## [INSTALL AUTOIT IF COMPILING YOURSELF] 
 For the fastest execution Autoit can be compiled as an .exe, but if autoit is installed it can also be run as a script by double-clicking wtc.au3. 
 Feel free to download an .exe in the release section or compile/run it yourself. \
 It's easy to compile Autoit, simply right click the wtc.au3 script after installing autoit and select compile (x86), an .exe will be generated.
@@ -14,12 +14,12 @@ The .exe's autoit generates are stand alone and do not require autoit to be inst
 
 https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - **Direct Download Autoit 32/64**
 
-## [MULTIGPU] \
+## [MULTIGPU] 
 Set $NUM_GPUS at the top of wtc.au3 \
 It should correspond with the number of instances on GPU's you would like to run \
 $NUM_GPU Default Configuration: 1  
 
-## [CPU] \
+## [CPU] 
 If you want to use CPU, set $NUM_CPU's to 1 in the top of wtc.au3.  \
 $NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)  \
 If using cpu it will be walton1.exe, which means walton2.exe should point to gpu0 if using CPU + GPU
@@ -30,13 +30,13 @@ C:\Walton-GPU-641
 C:\Walton-GPU-642
 C:\Walton-GPU-643 
 
-## [EXAMPLE MULTI-GPU AND CPU SETUP] \
+## [EXAMPLE MULTI-GPU AND CPU SETUP] 
 $GPU_NUM = 3 \
 $CPU_NUM = 1 \
 Then, CPU0 is Walton1.exe is on port 30303, and 8545.  GPU0 is walton2.exe on ports 30304, 8546/ GPU1. \
 GPU1 is walton3.exe on port 30305, 8547, and finally GPU2 is walton4.exe, ports 30306, and 8548. 
 
-## [EXAMPLE DIRECTORY STRUCTURE]  \
+## [EXAMPLE DIRECTORY STRUCTURE]  
 C:\  \
 ├── Walton-GPU-641  \
 │       ├── genesis.json  \
@@ -78,7 +78,7 @@ Another way to exit without logging or closing any of the miners is simply right
 
 
 At the top of wtc.au3 is where all the user options are. Here is a code snippit of the relavent section: \
-##------------------------------------CORE USER OPTIONS ------------------------------------------
+## ------------------------------------CORE USER OPTIONS ------------------------------------------
 ```autoit
 'Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
 ;Directly above is where to set your public wallet address.
