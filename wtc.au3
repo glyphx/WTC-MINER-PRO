@@ -30,7 +30,7 @@ Global $gpuPOW = ' --gpupow'    ;tells walton.exe if it is cpu or gpu
 Global $peerPort = " 30303"     ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
 Global $rpcPort = " 8545"       ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
 Global $maxPeers = "50"         ;Adjust the amount of maximum peers you can have per miner. 
-Global $pids[$NUM_GPUS][2]      ;array that stores the process id's of all the walton / mings
+Global $pids[$NUM_GPUS+$NUM_CPUS][2]      ;array that stores the process id's of all the walton / mings
 Global $first_run = 1
 
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)  ;lets check and see if the log file is going to be at a valid path for miner 1
@@ -55,9 +55,12 @@ While 1
 WEnd
 
 Func _runCMDS()
-    For $miner = 0 to $NUM_GPUS - 1 + $NUM_CPUS
-          If $NUM_CPUS = 1 & $first_run = 1 Then
-               $gpuPOW = ""
+    For $miner = 0 to $NUM_GPUS + $NUM_CPUS - 1 
+          If $NUM_CPUS = 1 Then
+               If $first_run = 1 Then
+               MsgBox(0,"","We're executing the statement")
+               $gpuPOW = ''
+               EndIf
           EndIf
           If _WinAPI_PathIsDirectory($keystorejson_path) = True Then
                If _WinAPI_PathIsDirectoryEmpty($keystorejson_path) = False Then
@@ -67,6 +70,7 @@ Func _runCMDS()
           
           Global $runCMD = @COMSPEC _
           & ' /k walton' & $gpu_path _
+          & $gpuPOW _
           & ' --maxpeers ' & $maxPeers _
           & ' --port ' & $peerPort _
           & ' --rpcport ' & $rpcPort & ' console' _
@@ -77,34 +81,39 @@ Func _runCMDS()
           & ' --datadir "node1"' _
           & ' --ipcdisable' _
           & ' --networkid 999' _
-          & ' --mine' _
-          & $gpuPOW _
+          & ' --mine' _          
           & $etherbase
 
           If $NUM_CPUS = 0 Then
                $pids[$miner][0] = Run($ming_path)
+               ProcessWait($pids[$miner][0])                         
+               ElseIf $NUM_CPUS = 1 Then
+                    If $first_run = 0 Then
+                         $pids[$miner][0] = Run($ming_path)
+                         ProcessWait($pids[$miner][0])
+                    EndIf
+               EndIf
+          $first_run = 0
+          $gpuPOW = ' --gpupow'
           
-          ElseIf $NUM_CPUS = 1 & $first_run = 0 Then
-               $pids[$miner][0] = Run($ming_path)
-          EndIf
-          ProcessWait(($pids[$miner][0]))
           $pids[$miner][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)
           ProcessWait($pids[$miner][1])
-          If $NUM_GPUS -1 > $miner Then
+          If $NUM_GPUS + $NUM_CPUS -1 > $miner Then
                $peerPort += 1
                $rpcPort += 1
                $gpu_path += 1
                $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
-               $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
+               $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"               
           EndIf
+          
      Next
      $peerPort = "30303"
      $rpcPort = "8545"
      $gpu_path = "1"
      $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
      $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
-     $gpuPOW = " --gpuPOW"
-     $first_run = 0
+     
+     
 EndFunc ;==>_runCmds()
 
 ; waiting to capture scroll lock, log, and quit.
