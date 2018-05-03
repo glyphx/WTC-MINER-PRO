@@ -56,7 +56,7 @@ WEnd
 
 Func _runCMDS()
     For $miner = 0 to $NUM_GPUS - 1 + $NUM_CPUS
-          If $NUM_CPUS <> 0 & $first_run = 1 Then
+          If $NUM_CPUS = 1 & $first_run = 1 Then
                $gpuPOW = ""
           EndIf
           If _WinAPI_PathIsDirectory($keystorejson_path) & _WinAPI_PathIsDirectoryEmpty($keystorejson_path) <> 1 Then
