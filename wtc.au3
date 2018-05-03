@@ -11,8 +11,8 @@
 
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
 Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"';if you have a .json keystore file this won't be used. Place your public address here.
-Global Const $NUM_GPUS = 1                      ;set the number of gpu's
-Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
+Global Const $NUM_GPUS = 3                      ;set the number of gpu's
+Global Const $NUM_CPUS = 1                      ;set the number of cpu's -- currently can only be 0 or 1
 Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
 Global Const $ROOT_DIR = "C:\"                  ;path to folder containing all copies of $FOLDER_NAME
 Global Const $FOLDER_NAME = "WALTON-GPU-64"     ;name of folder(s) inside $ROOT_DIR containing walton.exe
@@ -20,7 +20,8 @@ Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder(s) inside $FOLDE
 
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication. Set to 0 if you have a hard time getting peers.
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $ SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
-                                          
+
+
 Global $gpu_path = '1' ;how miner files are differentiated, don't touch this unless you trace the code to see how it works
 Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'  ;directory we're currently in
 Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of the log file we create.
@@ -32,6 +33,7 @@ Global $rpcPort = " 8545"       ;Start first miner rpc on 8545, miner 2: 8546, m
 Global $maxPeers = "50"         ;Adjust the amount of maximum peers you can have per miner. 
 Global $pids[$NUM_GPUS+$NUM_CPUS][2]      ;array that stores the process id's of all the walton / mings
 Global $first_run = 1
+Global $etherbaseHolder = $etherbase ; temp holder for etherbase address in case situations are different between miners
 
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)  ;lets check and see if the log file is going to be at a valid path for miner 1
 If $hFileOpen = -1 Then
@@ -57,19 +59,19 @@ WEnd
 Func _runCMDS()
     For $miner = 0 to $NUM_GPUS + $NUM_CPUS - 1 
           If $NUM_CPUS = 1 Then
-               If $first_run = 1 Then
-               MsgBox(0,"","We're executing the statement")
+               If $first_run = 1 Then               
                $gpuPOW = ''
                EndIf
           EndIf
           If _WinAPI_PathIsDirectory($keystorejson_path) = True Then
-               If _WinAPI_PathIsDirectoryEmpty($keystorejson_path) = False Then
+               If _WinAPI_PathIsDirectoryEmpty($keystorejson_path) = False Then                    
                     $etherbase = ""
                EndIf
           EndIf
           
           Global $runCMD = @COMSPEC _
           & ' /k walton' & $gpu_path _
+          & $etherbase _
           & $gpuPOW _
           & ' --maxpeers ' & $maxPeers _
           & ' --port ' & $peerPort _
@@ -81,8 +83,8 @@ Func _runCMDS()
           & ' --datadir "node1"' _
           & ' --ipcdisable' _
           & ' --networkid 999' _
-          & ' --mine' _          
-          & $etherbase
+          & ' --mine'           
+          
 
           If $NUM_CPUS = 0 Then
                $pids[$miner][0] = Run($ming_path)
@@ -95,6 +97,7 @@ Func _runCMDS()
                EndIf
           $first_run = 0
           $gpuPOW = ' --gpupow'
+          $etherbase = $etherbaseHolder
           
           $pids[$miner][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)
           ProcessWait($pids[$miner][1])
@@ -103,15 +106,18 @@ Func _runCMDS()
                $rpcPort += 1
                $gpu_path += 1
                $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
-               $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"               
+               $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
+               $keystorejson_path = $working_dir & "node1\keystores\"               
           EndIf
           
      Next
+     ;Reset things back to their initial values to through the loop again
      $peerPort = "30303"
      $rpcPort = "8545"
      $gpu_path = "1"
      $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
      $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
+     $keystorejson_path = $working_dir & "node1\keystores\"
      
      
 EndFunc ;==>_runCmds()
