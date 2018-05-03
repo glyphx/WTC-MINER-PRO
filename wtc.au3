@@ -43,8 +43,7 @@ FileClose($hFileOpen)
 While 1
      If $KILL_PROCS = 1 Then
           _runCMDS()
-     EndIf
-
+     
      Else $KILL_PROCS = 0 & $first_run = 0 Then
           _runCMDS()
      EndIf
