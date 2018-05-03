@@ -34,6 +34,7 @@ Global $maxPeers = "50"         ;Adjust the amount of maximum peers you can have
 Global $pids[$NUM_GPUS+$NUM_CPUS][2]      ;array that stores the process id's of all the walton / mings
 Global $first_run = 1
 Global $etherbaseHolder = $etherbase ; temp holder for etherbase address in case situations are different between miners
+Global $runNonKillProcs = 0
 
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)  ;lets check and see if the log file is going to be at a valid path for miner 1
 If $hFileOpen = -1 Then
@@ -46,8 +47,9 @@ FileClose($hFileOpen)
 While 1
      If $KILL_PROCS = 1 Then
           _runCMDS()     
-     ElseIf $KILL_PROCS = 0 & $first_run = 0 Then
+     ElseIf $KILL_PROCS = 0 & $runNonKillProcs = 0 Then
           _runCMDS()
+          $runNonKillProcs = 1
      EndIf
      _timedEscape() ;listen for escape key, if pressed run: _ConsoleToFile, and _closeProcesses and then exit()
      _ConsoleToFile() ; writes console buffer to log file
@@ -118,6 +120,7 @@ Func _runCMDS()
      $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
      $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
      $keystorejson_path = $working_dir & "node1\keystores\"
+     $first_run = 1
      
      
 EndFunc ;==>_runCmds()

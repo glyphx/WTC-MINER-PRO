@@ -13,11 +13,11 @@ It's easy to compile Autoit, simply right click the wtc.au3 script and select co
 https://www.autoitscript.com/site/autoit/downloads/ -Downloads page  \
 https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - Setup file
 
-MULTIGPU: The default is setup for 1 GPU, a quick edit at the top to $NUM_GPUS \
+MULTIGPU: The default is setup for 1 GPU, edit $NUM_GPUS at the top of wtc.au3 \
 set to another value, such as 2,3,4 etc will spawn these extra processes at the corresponding ports.  \
 $NUM_GPU Default Configuration: 1  
 
-CPU: SET $NUM_CPU's to 1 in the top of the script.  \
+CPU: SET $NUM_CPU's to 1 in the top of wtc.au3.  \
 $NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)  \
 If using cpu it will be walton1, which means walton2 should point to gpu0 if using CPU + GPU
 
