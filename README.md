@@ -7,11 +7,12 @@ Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 *if you downloaded .ex
 Step 4> compile and run  
 
 [INSTALL AUTOIT IF COMPILING YOURSELF]
-Autoit can be compiled as an .exe (bit faster) or run as a script, feel free to download an .exe in the release section or compile/run it yourself.
-It's easy to compile Autoit, simply right click the wtc.au3 script and select compile (x86), a .exe will be generated.
+For the fastest execution Autoit can be compiled as an .exe, but if autoit is installed it can also be run as a script. 
+Feel free to download an .exe in the release section or compile/run it yourself. \
+It's easy to compile Autoit, simply right click the wtc.au3 script after installing autoit and select compile (x86), an .exe will be generated.
+The .exe's autoit generates are stand alone and do not require autoit to be installed to use. *release section* \
 
-https://www.autoitscript.com/site/autoit/downloads/ -Downloads page  \
-https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - Setup file
+https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - *Direct Download Autoit 32/64*
 
 MULTIGPU: The default is setup for 1 GPU, edit $NUM_GPUS at the top of wtc.au3 \
 set to another value, such as 2,3,4 etc will spawn these extra processes at the corresponding ports.  \
@@ -78,9 +79,9 @@ At the top of wtc.au3 you will find these options --> \
 ------------------------------------CORE USER OPTIONS ------------------------------------------
 ```autoit
 'Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
-*Directly above is where to set your public wallet address.*
-*If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.*
-*Instead it would use the address of the .json keystore file.*
+;Directly above is where to set your public wallet address.
+;If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.
+;Instead it would use the address of the .json keystore file.
 Global Const $NUM_GPUS = 1                      ;set the number of gpu's
 Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
 Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
