@@ -41,12 +41,12 @@ C:\  \
 ├── Walton-GPU-641  \
 │       ├── genesis.json  \
 │       ├── GPUMing_v0.2     
-│       │        ├── cudart32_80.dll  \
-│       │        ├── cudart64_80.dll  \
-│       │        ├── ming_run.exe   
-│       │        ├── ming_run.iobj  \
-│       │        ├── ming_run.ipdb   
-│       │        └── ming_run.pdb  \
+│       │       ├── cudart32_80.dll  \
+│       │       ├── cudart64_80.dll  \
+│       │       ├── ming_run.exe   
+│       │       ├── ming_run.iobj  \
+│       │       ├── ming_run.ipdb   
+│       │       └── ming_run.pdb  \
 │       ├── log.txt   *Will be created for you*  \
 │       ├── node1  \
 │       │      └── keystores  \
@@ -56,13 +56,13 @@ C:\  \
 └── Walton-GPU-642   
          ├── genesis.json  \
          ├── GPUMing_v0.2   
-         │            ├── cudart32_80.dll  \
-         │         ├── cudart64_80.dll  \
-         │         ├── ming_run.exe  \
+         │        ├── cudart32_80.dll  \
+         │        ├── cudart64_80.dll  \
+         │        ├── ming_run.exe  \
          ├── log.txt  \
          ├── node1  \
          │      └── keystores   
-         |                   └── Keystore.json  \
+         │                   └── Keystore.json  \
          ├── This miner uses ports 30304 and 8546  \
          └── walton2.exe  *If using CPU walton2.exe points to gpu0.*
 
@@ -78,7 +78,7 @@ Another way to exit without logging or closing any of the miners is simply right
 
 
 At the top of wtc.au3 is where all the user options are. Here is a code snippit of the relavent section: \
-## ------------------------------------CORE USER OPTIONS ------------------------------------------
+## -------------------------CORE USER OPTIONS ------------------------------------------
 ```autoit
 'Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
 ;Directly above is where to set your public wallet address.
