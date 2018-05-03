@@ -5,11 +5,12 @@ l
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
 Step 2> *IMPORTANT* Rename first folder to Walton-GPU-641 and walton.exe to walton1.exe, further described below.  \
 Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 *if you downloaded .exe just run it now* \
-Step 4> compile and run
+Step 4> Enter your pubkey information into $etherbase at the top of wtc.au3, OR use .json files, more on this below. \
+Step 5> compile and run if configuring the scrpt yourself, or just run the .exe from release section.
 
 ## [INSTALL AUTOIT IF COMPILING YOURSELF] :package:
 
-For the fastest execution Autoit can be compiled as an .exe, but if autoit is installed it can also be run as a script by double-clicking wtc.au3. 
+For the fastest execution Autoit can be compiled as an .exe, but if autoit is installed it can also be run as a script by double-clicking wtc.au3.
 Feel free to download an .exe in the release section or compile/run it yourself. \
 It's easy to compile Autoit, simply right click the wtc.au3 script after installing autoit and select compile (x86), an .exe will be generated.
 The .exe's autoit generates are stand alone and do not require autoit to be installed to use. *release section*
@@ -91,7 +92,7 @@ Another way to exit without logging or closing any of the miners is simply right
 
 At the top of wtc.au3 is where all the user options are. Here is a code snippit of the relavent section.
 
-## -----------------------------CORE USER OPTIONS --------------------------
+## [-------------------------------CORE USER OPTIONS-------------------------------]
 
 ```autoit
 'Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
