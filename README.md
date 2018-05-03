@@ -1,7 +1,7 @@
 # MultiGPU + CPU Automation for WaltonChain Miner: 1.7.0
 
 ## [INSTALLATION]  :nut_and_bolt:
-l
+
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
 Step 2> *IMPORTANT* Rename first folder to Walton-GPU-641 and walton.exe to walton1.exe, further described below.  \
 Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 *if you downloaded .exe just run it now* \
@@ -92,7 +92,7 @@ Another way to exit without logging or closing any of the miners is simply right
 
 At the top of wtc.au3 is where all the user options are. Here is a code snippit of the relavent section.
 
-## [-------------------------------CORE USER OPTIONS-------------------------------]
+## [----------------------------------CORE USER OPTIONS---------------------------------]
 
 ```autoit
 'Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
