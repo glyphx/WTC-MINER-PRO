@@ -52,19 +52,23 @@ If $hFileOpen = -1 Then
 EndIf
 FileClose($hFileOpen)
 
-While 1
-     If $KILL_PROCS = 1 Then
-          _runCMDS()     
-     ElseIf $KILL_PROCS = 0 & $runNonKillProcs = 0 Then
-          _runCMDS()
-          $runNonKillProcs = 1
-     EndIf
-     _timedEscape() ;listen for escape key, if pressed run: _ConsoleToFile, and _closeProcesses and then exit()
-     _ConsoleToFile() ; writes console buffer to log file
-     If $KILL_PROCS = 1 Then
-          _closeProcesses() ; close all processes started by script
-     EndIf
-WEnd
+_Main() ;HERE WE GOOOOOOO!
+
+Func _Main()
+     While 1
+          If $KILL_PROCS = 1 Then
+               _runCMDS()     
+          ElseIf $KILL_PROCS = 0 & $runNonKillProcs = 0 Then
+               _runCMDS()
+               $runNonKillProcs = 1
+          EndIf
+          _timedEscape() ;listen for escape key, if pressed run: _ConsoleToFile, and _closeProcesses and then exit()
+          _ConsoleToFile() ; writes console buffer to log file
+          If $KILL_PROCS = 1 Then
+               _closeProcesses() ; close all processes started by script
+          EndIf
+     WEnd
+EndFunc;==>_Main()
 
 Func _runCMDS()
     For $miner = 0 to $NUM_GPUS + $NUM_CPUS - 1 
@@ -123,16 +127,14 @@ Func _runCMDS()
           EndIf
           
      Next
-     ;Reset things back to their initial values to through the loop again
+     ;Reset things back to their initial values to through go the loop again
      $peerPort = "30303"
      $rpcPort = "8545"
      $gpu_path = "1"
      $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
      $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
      $keystorejson_path = $working_dir & "node1\keystores\"
-     $first_run = 1
-     
-     
+     $first_run = 1   
 EndFunc ;==>_runCmds()
 
 ; waiting to capture scroll lock, log, and quit.
@@ -156,7 +158,7 @@ Func _timedEscape()
           EndIf
      Sleep(250)
     WEnd
-EndFunc
+EndFunc;==>_timedEscape()
 
 ;open a file, grab handle to console buffer of walton.exe, print to file.
 Func _ConsoleToFile()
@@ -170,7 +172,7 @@ Func _ConsoleToFile()
           FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
           FileClose($hfileOpen)
     Next
-EndFunc
+EndFunc;==>_ConsoleToFile()
 
 ; close all the processes the script opened not including itself
 Func _closeProcesses() ;rewrite to be more generic so it can be started before main execution of script to ensure clear execution
@@ -198,4 +200,4 @@ Func _closeProcesses() ;rewrite to be more generic so it can be started before m
           WinKill($pids[$miner][0])
      Sleep(1000)
      Next
-EndFunc
+EndFunc;==>_closeProcesses()
