@@ -1,4 +1,4 @@
-## Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
+## MultiGPU + CPU Automation for WaltonChain Miner: 1.7.0
 
 ## [INSTALLATION]  :nut_and_bolt:
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
@@ -51,7 +51,7 @@ C:\  \
          │      └── keystores   
          │                   └── Keystore.json  \
          ├── This miner uses ports 30304 and 8546  \
-         └── walton2.exe  **If using CPU walton2.exe points to gpu0.**
+         └── walton2.exe  **If using CPU walton2.exe points to GPU0.**
 
 ## [MULTIGPU] :vhs:
 Set $NUM_GPUS at the top of wtc.au3 \
