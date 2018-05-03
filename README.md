@@ -1,4 +1,4 @@
-#### Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
+## Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
 
 ## [INSTALLATION]  
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
