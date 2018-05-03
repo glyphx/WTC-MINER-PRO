@@ -21,7 +21,7 @@ Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- curr
 Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
 ;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
-Global Const $SHOW_WINDOW = @SW_SHOW  ;change $ SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
+Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
 Global Const $MINER_THREADS = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable.
 
 ;----------------------------------------------------------------------------------------------------------------------------------------
