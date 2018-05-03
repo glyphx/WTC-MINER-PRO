@@ -22,7 +22,7 @@ Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loo
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
 ;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $ SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
-Global Const = $minerThreads = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable.
+Global Const = $MINER_THREADS = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable.
 
 ;----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'  ;directory we'
 Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of the log file we create.
 Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"  ; MING MING MING! 
 Global $keystorejson_path = $working_dir & "node1\keystores\"
-Global $gpupowORminerthreads = ' --gpupow'    ;tells walton.exe if it is cpu or gpu, if gpu isn't active this is set to $minerThreads
+Global $gpupowORminerthreads = ' --gpupow'    ;tells walton.exe if it is cpu or gpu, if gpu isn't active this is set to $MINER_THREADS
 Global $peerPort = " 30303"     ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
 Global $rpcPort = " 8545"       ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
 Global $maxPeers = "50"         ;Adjust the amount of maximum peers you can have per miner. 
@@ -76,7 +76,7 @@ Func _runCMDS()
     For $miner = 0 to $NUM_GPUS + $NUM_CPUS - 1 
           If $NUM_CPUS = 1 Then
                If $first_run = 1 Then               
-               $gpupowORminerthreads = $minerThreads               
+               $gpupowORminerthreads = $MINER_THREADS               
                EndIf
           EndIf
           If not _WinAPI_PathIsDirectory($working_dir & "node1\") Then
