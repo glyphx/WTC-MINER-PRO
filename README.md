@@ -32,12 +32,12 @@ Walton.exe should also be renamed to walton 1, walton 2, etc.
 C:\  \
 ├── Walton-GPU-641  \
 │       ├── genesis.json  \
-│       ├── GPUMing_v0.2
+│       ├── GPUMing_v0.2 \
 │       │       ├── cudart32_80.dll  \
 │       │       ├── cudart64_80.dll  \
 │       │       ├── ming_run.exe **If using CPU this isn't run. If not using CPU this must point to GPU0**   \
 │       │       ├── ming_run.iobj  \
-│       │       ├── ming_run.ipdb
+│       │       ├── ming_run.ipdb \
 │       │       └── ming_run.pdb  \
 │       ├── log.txt   **Will be created for you**  \
 │       ├── node1  \
@@ -52,7 +52,7 @@ C:\  \
          │        ├── cudart64_80.dll  \
          │        ├── ming_run.exe **If using CPU this points to GPU0, if not using CPU this must point to GPU1.** \
          │       │       ├── ming_run.iobj  \
-         │       │       ├── ming_run.ipdb
+         │       │       ├── ming_run.ipdb \
          │       │       └── ming_run.pdb  \
          ├── log.txt  \
          ├── node1  \
