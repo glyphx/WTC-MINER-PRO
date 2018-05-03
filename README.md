@@ -1,9 +1,9 @@
 Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
 
 [INSTALLATION]  \
-Step 1> Download scripts via .zip, .exe release, or github.  \
-Step 2> *IMPORTANT* Rename folders and walton.exe to walton1.exe etc as described below  \
-Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3\
+Step 1> Download scripts via .zip, .exe release, or git clone.  \
+Step 2> *IMPORTANT* Rename first folder to Walton-GPU-641 and walton.exe to walton1.exe, further described below.  \
+Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 *if you downloaded .exe just run it now* \
 Step 4> compile and run  
 
 [INSTALL AUTOIT IF COMPILING YOURSELF]
@@ -25,7 +25,13 @@ If using cpu it will be walton1, which means walton2 should point to gpu0 if usi
 You have a directory structure of:
 C:\Walton-GPU-641
 C:\Walton-GPU-642
-C:\Walton-GPU-643 etc
+C:\Walton-GPU-643 
+
+[Example of complicated setup] \
+$GPU_NUM = 3 \
+$CPU_NUM = 1 \
+Then, CPU0 is Walton1.exe is on port 30303, and 8545.  GPU0 is walton2.exe on ports 30304, 8546/ GPU1. \
+GPU1 is walton3.exe on port 30305, 8547, and finally GPU2 is walton4.exe, ports 30306, and 8548. \
 
 [EXAMPLE DIRECTORY STRUCTURE]  \
 C:\  \
@@ -47,7 +53,7 @@ C:\  \
 └── Walton-GPU-642   
          ├── genesis.json  \
          ├── GPUMing_v0.2   
-         │         ├── cudart32_80.dll  \
+         │            ├── cudart32_80.dll  \
          │         ├── cudart64_80.dll  \
          │         ├── ming_run.exe  \
          ├── log.txt  \
@@ -65,7 +71,25 @@ The script assumes that you have setup your multiGPU setup with ascending ports,
 
 [EXITING AND LOGGING]:
 Press and hold scroll lock untill you see the tool tip change to "Scroll Lock Behind Held Down, Shutting Down", the script will log each miner and exit all processes including itself.
-Another way to exit without logging or closing any of the miners is simply right clicking the .exe/script in the taskbar and selecting quit. 
+Another way to exit without logging or closing any of the miners is simply right clicking the .exe/script in the taskbar and selecting quit. \
+
+
+--->wtc.au3 \
+------------------------------------CORE USER OPTIONS ----------------------------------------------------------------------------------
+Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
+*Directly above is where to set your public wallet address.*
+*If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.*
+*Instead it would use the address of the .json keystore file.*
+Global Const $NUM_GPUS = 1                      ;set the number of gpu's
+Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
+Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
+Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
+;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
+Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
+Global Const $MINER_THREADS = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable.
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 0.6 Goals: Better user interface.
