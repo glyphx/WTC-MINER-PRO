@@ -10,16 +10,26 @@
 #include <Clipboard.au3>
 
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
-Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"';if you have a .json keystore file this won't be used. Place your public address here.
+
+;------------------------------------CORE USER OPTIONS ----------------------------------------------------------------------------------
+Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
+;Directly above is where to set your public wallet address.  --
+;If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.
+;Instead it would use the address of the .json keystore file.
 Global Const $NUM_GPUS = 1                      ;set the number of gpu's
 Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
 Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
+Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
+;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
+Global Const $SHOW_WINDOW = @SW_SHOW  ;change $ SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
+;----------------------------------------------------------------------------------------------------------------------------------------
+
+;--------------------------------------PATH OPTIONS--------------------------------------------------------------------------------------
 Global Const $ROOT_DIR = "C:\"                  ;path to folder containing all copies of $FOLDER_NAME
 Global Const $FOLDER_NAME = "WALTON-GPU-64"     ;name of folder(s) inside $ROOT_DIR containing walton.exe
 Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder(s) inside $FOLDER_NAME that contains ming_run.exe
-Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication. Set to 0 if you have a hard time getting peers.
-Global Const $SHOW_WINDOW = @SW_SHOW  ;change $ SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
 Global $gpu_path = '1' ;how miner files are differentiated, don't touch this unless you trace the code to see how it works
+;---------------------------------------------------------------------------------------------------------------------------------------
 
 Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'  ;directory we're currently in
 Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of the log file we create.
@@ -86,8 +96,7 @@ Func _runCMDS()
           & ' --datadir "node1"' _
           & ' --ipcdisable' _
           & ' --networkid 999' _
-          & ' --mine'           
-          
+          & ' --mine'    
 
           If $NUM_CPUS = 0 Then
                $pids[$miner][0] = Run($ming_path)
