@@ -28,13 +28,13 @@ C:\Walton-GPU-643 etc
 [EXAMPLE DIRECTORY STRUCTURE]
 C:\
 ├── Walton-GPU-641  \
-│   ├── genesis.json  \  
-│   ├── GPUMing_v0.2  \ 
+│   ├── genesis.json
+│   ├── GPUMing_v0.2   
 │   │   ├── cudart32_80.dll  \
 │   │   ├── cudart64_80.dll  \
-│   │   ├── ming_run.exe  \ 
+│   │   ├── ming_run.exe   
 │   │   ├── ming_run.iobj  \
-│   │   ├── ming_run.ipdb  \ 
+│   │   ├── ming_run.ipdb   
 │   │   └── ming_run.pdb  \
 │   ├── log.txt   *Will be created for you*  \
 │   ├── node1  \
@@ -44,16 +44,16 @@ C:\
 │   └── walton1.exe  \
 └── Walton-GPU-642  \ 
     ├── genesis.json  \
-    ├── GPUMing_v0.2  \ 
+    ├── GPUMing_v0.2   
     │   ├── cudart32_80.dll  \
     │   ├── cudart64_80.dll  \
     │   ├── ming_run.exe  \
     ├── log.txt  \
     ├── node1  \
-    │   └── keystores  \ 
+    │   └── keystores   
     │       └── Keystore.json  \
     ├── This miner uses ports 30304 and 8546  \
-    └── walton2.exe  \
+    └── walton2.exe  
 
 [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG]:
 Walton.exe should also be renamed to walton 1, walton 2, etc.
