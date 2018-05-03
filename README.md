@@ -30,6 +30,9 @@ C:\Walton-GPU-641
 C:\Walton-GPU-642
 C:\Walton-GPU-643 
 
+## [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
+Walton.exe should also be renamed to walton 1, walton 2, etc.
+
 ## [EXAMPLE MULTI-GPU AND CPU SETUP] :computer: :vhs: :vhs: :vhs: :vhs:
 $GPU_NUM = 3 \
 $CPU_NUM = 1 \
@@ -65,9 +68,6 @@ C:\  \
          │                   └── Keystore.json  \
          ├── This miner uses ports 30304 and 8546  \
          └── walton2.exe  **If using CPU walton2.exe points to gpu0.**
-
-## [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
-Walton.exe should also be renamed to walton 1, walton 2, etc.
 
 ## [PORT ASSUMPTIONS \ DEFAULT CONFIG] :phone:
 The script assumes that you have setup your multiGPU setup with ascending ports, from walton1 = 30303, 8545.  Walton2 = 30304,8546, etc.
