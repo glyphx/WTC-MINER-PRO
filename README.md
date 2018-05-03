@@ -30,13 +30,13 @@ C:\Walton-GPU-641
 C:\Walton-GPU-642
 C:\Walton-GPU-643 
 
-## [EXAMPLE MULTI-GPU AND CPU SETUP] 
+## [EXAMPLE MULTI-GPU AND CPU SETUP] :computer: :vhs: :vhs: :vhs: :vhs:
 $GPU_NUM = 3 \
 $CPU_NUM = 1 \
 Then, CPU0 is Walton1.exe is on port 30303, and 8545.  GPU0 is walton2.exe on ports 30304, 8546/ GPU1. \
 GPU1 is walton3.exe on port 30305, 8547, and finally GPU2 is walton4.exe, ports 30306, and 8548. 
 
-## [EXAMPLE DIRECTORY STRUCTURE]  
+## [EXAMPLE DIRECTORY STRUCTURE]  :file_folder:
 C:\  \
 ├── Walton-GPU-641  \
 │       ├── genesis.json  \
@@ -66,13 +66,13 @@ C:\  \
          ├── This miner uses ports 30304 and 8546  \
          └── walton2.exe  **If using CPU walton2.exe points to gpu0.**
 
-## [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG]
+## [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 Walton.exe should also be renamed to walton 1, walton 2, etc.
 
-## [PORT ASSUMPTIONS \ DEFAULT CONFIG]
+## [PORT ASSUMPTIONS \ DEFAULT CONFIG] :phone:
 The script assumes that you have setup your multiGPU setup with ascending ports, from walton1 = 30303, 8545.  Walton2 = 30304,8546, etc.
 
-## [EXITING AND LOGGING]
+## [LOGGING AND EXITING] :ledger: :door:
 Press and hold scroll lock untill you see the tool tip change to "Scroll Lock Behind Held Down, Shutting Down", the script will log each miner and exit all processes including itself.
 Another way to exit without logging or closing any of the miners is simply right clicking the .exe/script in the taskbar and selecting quit. \
 
