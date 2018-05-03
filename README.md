@@ -29,7 +29,7 @@ C:\Walton-GPU-643 etc
 C:\
 ├── Walton-GPU-641  \
 │   ├── genesis.json
-│   ├── GPUMing_v0.2   
+│   ├── GPUMing_v0.2  \   
 │   │   ├── cudart32_80.dll  \
 │   │   ├── cudart64_80.dll  \
 │   │   ├── ming_run.exe   
