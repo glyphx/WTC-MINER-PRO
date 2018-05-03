@@ -64,7 +64,7 @@ Func _runCMDS()
                EndIf
           EndIf
           If not _WinAPI_PathIsDirectory($working_dir & "node1\") Then
-               Run(@ComSpec & ' /c walton' & $gpu_path & " --datadir node1 init genesis.json")
+               Run(@ComSpec & ' /c walton' & $gpu_path & " --datadir node1 init genesis.json",$working_dir)
           EndIf               
           If _WinAPI_PathIsDirectory($keystorejson_path) = True Then
                If _WinAPI_PathIsDirectoryEmpty($keystorejson_path) = False Then                    
