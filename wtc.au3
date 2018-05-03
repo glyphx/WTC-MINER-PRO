@@ -59,7 +59,7 @@ Func _runCMDS()
           If $NUM_CPUS <> 0 & $first_run = 1 Then
                $gpuPOW = ""
           EndIf
-          If _WinAPI_PathIsDirectory($keystorejson_path) && _WinAPI_PathIsDirectoryEmpty($keystorejson_path) <> 1
+          If _WinAPI_PathIsDirectory($keystorejson_path) && _WinAPI_PathIsDirectoryEmpty($keystorejson_path) <> 1 Then
                $etherbase = ""
           EndIf
           
