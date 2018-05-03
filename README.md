@@ -25,8 +25,8 @@ C:\Walton-GPU-641
 C:\Walton-GPU-642
 C:\Walton-GPU-643 etc
 
-[EXAMPLE DIRECTORY STRUCTURE]
-C:\
+[EXAMPLE DIRECTORY STRUCTURE]  \
+C:\  \
 ├── Walton-GPU-641  \
 │   ├── genesis.json  \
 │   ├── GPUMing_v0.2     
