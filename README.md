@@ -1,7 +1,7 @@
 # MultiGPU + CPU Automation for WaltonChain Miner: 1.7.0
 
 ## [INSTALLATION]  :nut_and_bolt:
-
+l
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
 Step 2> *IMPORTANT* Rename first folder to Walton-GPU-641 and walton.exe to walton1.exe, further described below.  \
 Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 *if you downloaded .exe just run it now* \
@@ -44,10 +44,10 @@ C:\  \
 │       │      └── keystores  \
 │       │                   └── keystore.json **OPTIONAL, you can choose to include the etherbase information at the top of the script** \
 │       ├── _This miner uses ports 30303 and 8545  \
-│       └── walton1.exe
+│       └── walton1.exe \
 └── Walton-GPU-642 \
          ├── genesis.json  \
-         ├── GPUMing_v0.2
+         ├── GPUMing_v0.2 \
          │        ├── cudart32_80.dll  \
          │        ├── cudart64_80.dll  \
          │        ├── ming_run.exe **If using CPU this points to GPU0, if not using CPU this must point to GPU1.** \
