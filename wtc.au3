@@ -1,4 +1,3 @@
-
 #include <Array.au3>
 #include <AutoItConstants.au3>
 #include <CmdA.au3>
@@ -12,12 +11,13 @@
 
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
 Global Const $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"';if you have a .json keystore file this won't be used. Place your public address here.
+Global Const $NUM_GPUS = 1                      ;set the number of gpu's
+Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
 Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
 Global Const $ROOT_DIR = "C:\"                  ;path to folder containing all copies of $FOLDER_NAME
 Global Const $FOLDER_NAME = "WALTON-GPU-64"     ;name of folder(s) inside $ROOT_DIR containing walton.exe
 Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder(s) inside $FOLDER_NAME that contains ming_run.exe
-Global Const $NUM_GPUS = 1                      ;set the number of gpu's
-Global Const $NUM_CPUS = 0                      ;currently can only be 0 or 1
+
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication. Set to 0 if you have a hard time getting peers.
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $ SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
                                           
@@ -44,7 +44,7 @@ FileClose($hFileOpen)
 While 1
      If $KILL_PROCS = 1 Then
           _runCMDS()     
-     Else $KILL_PROCS = 0 & $first_run = 0 Then
+     ElseIf $KILL_PROCS = 0 & $first_run = 0 Then
           _runCMDS()
      EndIf
      _timedEscape() ;listen for escape key, if pressed run: _ConsoleToFile, and _closeProcesses and then exit()
@@ -82,7 +82,7 @@ Func _runCMDS()
           If $NUM_CPUS = 0 Then
                $pids[$miner][0] = Run($ming_path)
           
-          Else $NUM_CPUS <> 0 & $first_run = 0 Then
+          ElseIf $NUM_CPUS <> 0 & $first_run = 0 Then
                $pids[$miner][0] = Run($ming_path)
           EndIf
           ProcessWait(($pids[$miner][0]))
