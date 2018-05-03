@@ -75,7 +75,7 @@ Another way to exit without logging or closing any of the miners is simply right
 
 
 At the top of wtc.au3 you will find these options --> \
-------------------------------------CORE USER OPTIONS ----------------------------------------------------------------------------------  \
+------------------------------------CORE USER OPTIONS ------------------------------------------
 ```autoit
 'Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
 *Directly above is where to set your public wallet address.*
@@ -89,10 +89,6 @@ Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew eve
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
 Global Const $MINER_THREADS = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable. \
 ```
-
-----------------------------------------------------------------------------------------------------------------------------------------
-
-
 
 0.6 Goals: Better user interface.
 
