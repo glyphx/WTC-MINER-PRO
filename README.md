@@ -76,7 +76,7 @@ Another way to exit without logging or closing any of the miners is simply right
 
 At the top of wtc.au3 you will find these options --> \
 ------------------------------------CORE USER OPTIONS ----------------------------------------------------------------------------------  \
-''' Ruby 
+'''autoit 
 'Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
 *Directly above is where to set your public wallet address.*
 *If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.*
