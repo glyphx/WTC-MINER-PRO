@@ -47,12 +47,12 @@ C:\  \
 │       │       ├── ming_run.iobj  \
 │       │       ├── ming_run.ipdb   
 │       │       └── ming_run.pdb  \
-│       ├── log.txt   *Will be created for you*  \
+│       ├── log.txt   **Will be created for you**  \
 │       ├── node1  \
 │       │      └── keystores  \
 │       │                   └── keystore.json **OPTIONAL, you can choose to include the etherbase information at the top of the script** \
 │       ├── _This miner uses ports 30303 and 8545  \
-│       └── walton1.exe  *If NOT using CPU this points to GPU0*  \
+│       └── walton1.exe  **If NOT using CPU this points to GPU0**  \
 └── Walton-GPU-642   
          ├── genesis.json  \
          ├── GPUMing_v0.2   
