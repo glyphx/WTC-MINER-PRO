@@ -51,9 +51,9 @@ C:\  \
          │        ├── cudart32_80.dll  \
          │        ├── cudart64_80.dll  \
          │        ├── ming_run.exe **If using CPU this points to GPU0, if not using CPU this must point to GPU1.** \
-         │        │       ├── ming_run.iobj  \
-         │        │       ├── ming_run.ipdb \
-         │        │       └── ming_run.pdb  \
+         │        ├── ming_run.iobj  \
+         │        ├── ming_run.ipdb \
+         │        └── ming_run.pdb  \
          ├── log.txt  \
          ├── node1  \
          │      └── keystores \
