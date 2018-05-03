@@ -1,4 +1,4 @@
-## MultiGPU + CPU Automation for WaltonChain Miner: 1.7.0
+## MultiGPU +l CPU Automation for WaltonChain Miner: 1.7.0
 
 ## [INSTALLATION]  :nut_and_bolt:
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
