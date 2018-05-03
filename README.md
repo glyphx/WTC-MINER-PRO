@@ -1,12 +1,12 @@
 ## Multigpu + CPU Automation for WaltonChain Miner: 1.7.0
 
-## [INSTALLATION]  
+## [INSTALLATION]  :nut_and_bolt:
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
 Step 2> *IMPORTANT* Rename first folder to Walton-GPU-641 and walton.exe to walton1.exe, further described below.  \
 Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 *if you downloaded .exe just run it now* \
 Step 4> compile and run  
 
-## [INSTALL AUTOIT IF COMPILING YOURSELF] 
+## [INSTALL AUTOIT IF COMPILING YOURSELF] :package:
 For the fastest execution Autoit can be compiled as an .exe, but if autoit is installed it can also be run as a script by double-clicking wtc.au3. 
 Feel free to download an .exe in the release section or compile/run it yourself. \
 It's easy to compile Autoit, simply right click the wtc.au3 script after installing autoit and select compile (x86), an .exe will be generated.
@@ -14,17 +14,17 @@ The .exe's autoit generates are stand alone and do not require autoit to be inst
 
 https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - **Direct Download Autoit 32/64**
 
-## [MULTIGPU] 
+## [MULTIGPU] :vhs:
 Set $NUM_GPUS at the top of wtc.au3 \
 It should correspond with the number of instances on GPU's you would like to run \
 $NUM_GPU Default Configuration: 1  
 
-## [CPU] 
+## [CPU] :computer:
 If you want to use CPU, set $NUM_CPU's to 1 in the top of wtc.au3.  \
 $NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)  \
 If using cpu it will be walton1.exe, which means walton2.exe should point to gpu0 if using CPU + GPU
 
-## [DIRECTORY STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG]  
+## [DIRECTORY STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 You have a directory structure of:
 C:\Walton-GPU-641
 C:\Walton-GPU-642
