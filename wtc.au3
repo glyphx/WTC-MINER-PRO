@@ -59,7 +59,7 @@ Func _runCMDS()
           If $NUM_CPUS = 1 & $first_run = 1 Then
                $gpuPOW = ""
           EndIf
-          If _WinAPI_PathIsDirectory($keystorejson_path) & _WinAPI_PathIsDirectoryEmpty($keystorejson_path) <> 1 Then
+          If _WinAPI_PathIsDirectory($keystorejson_path) & _WinAPI_PathIsDirectoryEmpty($keystorejson_path) = False Then
                $etherbase = ""
           EndIf
           
@@ -82,7 +82,7 @@ Func _runCMDS()
           If $NUM_CPUS = 0 Then
                $pids[$miner][0] = Run($ming_path)
           
-          ElseIf $NUM_CPUS <> 0 & $first_run = 0 Then
+          ElseIf $NUM_CPUS = 1 & $first_run = 0 Then
                $pids[$miner][0] = Run($ming_path)
           EndIf
           ProcessWait(($pids[$miner][0]))
