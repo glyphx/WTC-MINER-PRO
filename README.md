@@ -26,7 +26,7 @@ C:\Walton-GPU-642
 
 ## [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 
-Walton.exe should also be renamed to walton 1, walton 2, etc.
+Walton.exe should also be renamed to walton0, walton1 as in the example below.
 
 ## [EXAMPLE DIRECTORY STRUCTURE FOR 1GPU & 1CPU]  :file_folder:
 
