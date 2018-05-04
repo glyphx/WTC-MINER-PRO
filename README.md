@@ -13,7 +13,7 @@ Step 5> Optionally compile as x86 (suggested), and run.
 For the fastest execution Autoit can be compiled as an .exe, but if autoit is installed it can also be run as a script by double-clicking wtc.au3.
 Feel free to download an .exe in the release section or compile/run it yourself. \
 It's easy to compile Autoit, simply right click the wtc.au3 script after installing autoit and select compile (x86), an .exe will be generated.
-The .exe's autoit generates are stand alone and do not require autoit to be installed to use. *release section*
+The .exe's autoit generates are stand alone and do not require autoit to be installed to use. \
 
 https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - **Direct Download Autoit 32/64**
 
@@ -28,7 +28,7 @@ C:\Walton-GPU-642
 
 Walton.exe should also be renamed to walton 1, walton 2, etc.
 
-## [EXAMPLE DIRECTORY STRUCTURE]  :file_folder:
+## [EXAMPLE DIRECTORY STRUCTURE FOR 1GPU & 1CPU]  :file_folder:
 
 C:\  \
 ├── Walton-GPU-640  \
