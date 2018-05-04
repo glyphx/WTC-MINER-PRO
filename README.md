@@ -76,14 +76,14 @@ If using CPU it will be run on the last miner file you include, that file doens'
 
 ## [EXAMPLE MULTI-GPU AND CPU SETUP] :computer: :vhs: :vhs: :vhs: :vhs:
 
-$GPU_NUM = 3 \
-$CPU_NUM = 1 \
-Then, GPU0 is 640\Walton1.exe is on port 30303, and 8545.  GPU1 is walton2.exe on ports 30304, 8546 \
-GPU2 is walton3.exe on port 30305, 8547, and finally CPU0 is walton4.exe, ports 30306, and 8548.
+$NUM_GPU = 3 \
+$NUM_CPU = 1 \
+Then, GPU0 is 640\Walton0.exe is on port 30303, and 8545.  GPU1 is walton1.exe on ports 30304, 8546 \
+GPU2 is walton2.exe on port 30305, 8547, and finally CPU0 is walton4.exe, ports 30306, and 8548.
 
 ## [PORT ASSUMPTIONS \ DEFAULT CONFIG] :phone:
 
-The script assumes that you have setup your multiGPU setup with ascending ports, from walton1 = 30303, 8545.  Walton2 = 30304,8546, etc.
+The script assumes that you have setup your multiGPU setup with ascending ports, from walton0 = 30303, 8545.  Walton1 = 30304,8546, etc.
 
 ## [LOGGING AND EXITING] :ledger: :door:
 
