@@ -19,10 +19,10 @@ https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - **
 
 ## [DIRECTORY STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 
-You have a directory structure of:
+You have a directory structure of: \
 C:\Walton-GPU-641 \
 C:\Walton-GPU-642 \
-C:\Walton-GPU-643 \
+C:\Walton-GPU-643
 
 ## [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 
@@ -44,7 +44,7 @@ C:\  \
 │       ├── node1  \
 │       │      └── keystores  \
 │       │                   └── keystore.json **OPTIONAL, you can choose to include the etherbase information at the top of the script** \
-│       ├── _This miner uses ports 30303 and 8545  \
+│       ├ **This miner uses ports 30303 and 8545**  \
 │       └── walton1.exe \
 └── Walton-GPU-642 \
          ├── genesis.json  \
@@ -59,7 +59,7 @@ C:\  \
          ├── node1  \
          │      └── keystores \
          │                   └── Keystore.json  \
-         ├── This miner uses ports 30304 and 8546  \
+         ├ **This miner uses ports 30304 and 8546**  \
          └── walton2.exe
 
 ## [MULTIGPU] :vhs:

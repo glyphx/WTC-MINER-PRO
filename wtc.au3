@@ -1,5 +1,5 @@
 ;@Author : glyph
-;@License : MIT, One should have been included in your copy of the software. If not, you can get one at: https://opensource.org/licenses/MIT
+;@License : MIT, A copy should have been included in your copy of the software. If not, you can get one at: https://opensource.org/licenses/MIT
 #include <Array.au3>
 #include <AutoItConstants.au3>
 #include <CmdA.au3>
@@ -14,7 +14,7 @@
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
 
 ;------------------------------------CORE USER OPTIONS ----------------------------------------------------------------------------------
-Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
+Global Const $ETHERBASE = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"' ;aka pubkey, aka wallet address
 ;Directly above is where to set your public wallet address.  --
 ;If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.
 ;Instead it would use the address of the .json keystore file.
@@ -25,7 +25,7 @@ Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew eve
 ;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
 Global Const $MINER_THREADS = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable.
-
+; https://steemit.com/waltonchain/@slackerjack/mining-waltonchain-mainnet-with-cpu-via-cli  TODO: Include CPU Affinity Logic to Program
 ;----------------------------------------------------------------------------------------------------------------------------------------
 
 ;--------------------------------------PATH OPTIONS--------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ Global $rpcPort = " 8545"       ;Start first miner rpc on 8545, miner 2: 8546, m
 Global $maxPeers = "50"         ;Adjust the amount of maximum peers you can have per miner. 
 Global $pids[$NUM_GPUS+$NUM_CPUS][2]      ;array that stores the process id's of all the walton / mings
 Global $first_run = 1
-Global $etherbaseHolder = $etherbase ; temp holder for etherbase address in case situations are different between miners
+Global $ETHERBASEHolder = $ETHERBASE ; temp holder for etherbase address in case situations are different between miners
 Global $runNonKillProcs = 0
 
 Global $hFileOpen = FileOpen($log_path, $FO_APPEND)  ;lets check and see if the log file is going to be at a valid path for miner 1
@@ -74,6 +74,7 @@ Func _Main()
      WEnd
 EndFunc;==>_Main()
 
+
 Func _runCMDS()
     For $miner = 0 to $NUM_GPUS + $NUM_CPUS - 1 
           If $NUM_CPUS = 1 Then
@@ -86,13 +87,13 @@ Func _runCMDS()
           EndIf               
           If _WinAPI_PathIsDirectory($keystorejson_path) = True Then
                If _WinAPI_PathIsDirectoryEmpty($keystorejson_path) = False Then                    
-                    $etherbase = ""
+                    $ETHERBASEHolder = ""
                EndIf
           EndIf
           
           Global $runCMD = @COMSPEC _
           & ' /k walton' & $gpu_path _
-          & $etherbase _
+          & $ETHERBASEHolder _
           & $gpupowORminerthreads _
           & ' --port ' & $peerPort _
           & ' --rpcport ' & $rpcPort & ' console' _
@@ -117,7 +118,7 @@ Func _runCMDS()
                EndIf
           $first_run = 0
           $gpupowORminerthreads = ' --gpupow'
-          $etherbase = $etherbaseHolder
+          $ETHERBASEHolder = $ETHERBASE
           
           $pids[$miner][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)
           ProcessWait($pids[$miner][1])
