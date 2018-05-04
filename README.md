@@ -3,10 +3,10 @@
 ## [INSTALLATION]  :package:
 
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
-Step 2> **IMPORTANT** Rename first folder to Walton-GPU-641 and *walton.exe* to *walton1.exe*, further described below.  \
+Step 2> **IMPORTANT** Rename first folder to Walton-GPU-640 and *walton.exe* to *walton0.exe*, further described below.  \
 Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 **If you downloaded .exe just run it now, no edits required.** \
 Step 4> Enter your pubkey information into $etherbase at the top of wtc.au3, OR use .json files, more on this below. \
-Step 5> Optionally compile as x86 (suggested), and run. \
+Step 5> Optionally compile as x86 (suggested), and run.
 
 ## [INSTALL AUTOIT IF COMPILING YOURSELF] :package:
 
@@ -20,9 +20,9 @@ https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - **
 ## [DIRECTORY STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 
 You have a directory structure of: \
+C:\Walton-GPU-640 \
 C:\Walton-GPU-641 \
-C:\Walton-GPU-642 \
-C:\Walton-GPU-643
+C:\Walton-GPU-642
 
 ## [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 
@@ -31,27 +31,27 @@ Walton.exe should also be renamed to walton 1, walton 2, etc.
 ## [EXAMPLE DIRECTORY STRUCTURE]  :file_folder:
 
 C:\  \
-├── Walton-GPU-641  \
+├── Walton-GPU-640  \
 │       ├── genesis.json  \
 │       ├── GPUMing_v0.2 \
 │       │       ├── cudart32_80.dll  \
 │       │       ├── cudart64_80.dll  \
-│       │       ├── ming_run.exe **If using CPU this isn't run. If not using CPU this must point to GPU0**   \
+│       │       ├── ming_run.exe **This file points to GPU0**   \
 │       │       ├── ming_run.iobj  \
 │       │       ├── ming_run.ipdb \
 │       │       └── ming_run.pdb  \
 │       ├── log.txt   **Will be created for you**  \
-│       ├── node1  \
+│       ├── node1  **node1 directory will be created if not present** \
 │       │      └── keystores  \
 │       │                   └── keystore.json **OPTIONAL, you can choose to include the etherbase information at the top of the script** \
 │       ├ **This miner uses ports 30303 and 8545**  \
-│       └── walton1.exe \
+│       └── walton0.exe \
 └── Walton-GPU-642 \
          ├── genesis.json  \
          ├── GPUMing_v0.2 \
          │        ├── cudart32_80.dll  \
          │        ├── cudart64_80.dll  \
-         │        ├── ming_run.exe **If using CPU this points to GPU0, if not using CPU this must point to GPU1.** \
+         │        ├── ming_run.exe **If using CPU this file will not be run, if not using CPU this file should exist & point to GPU1.**
          │        ├── ming_run.iobj  \
          │        ├── ming_run.ipdb \
          │        └── ming_run.pdb  \
@@ -60,7 +60,7 @@ C:\  \
          │      └── keystores \
          │                   └── Keystore.json  \
          ├ **This miner uses ports 30304 and 8546**  \
-         └── walton2.exe
+         └── walton1.exe
 
 ## [MULTIGPU] :vhs:
 
@@ -72,14 +72,14 @@ $NUM_GPU Default Configuration: 1
 
 If you want to use CPU, set $NUM_CPU's to 1 in the top of wtc.au3.  \
 $NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)  \
-If using cpu it will be walton1.exe, which means walton2.exe should point to gpu0 if using CPU + GPU
+If using CPU it will be run on the last miner file you include, that file doens't need ming_run.exe. 
 
 ## [EXAMPLE MULTI-GPU AND CPU SETUP] :computer: :vhs: :vhs: :vhs: :vhs:
 
 $GPU_NUM = 3 \
 $CPU_NUM = 1 \
-Then, CPU0 is Walton1.exe is on port 30303, and 8545.  GPU0 is walton2.exe on ports 30304, 8546/ GPU1. \
-GPU1 is walton3.exe on port 30305, 8547, and finally GPU2 is walton4.exe, ports 30306, and 8548.
+Then, GPU0 is 640\Walton1.exe is on port 30303, and 8545.  GPU1 is walton2.exe on ports 30304, 8546 \
+GPU2 is walton3.exe on port 30305, 8547, and finally CPU0 is walton4.exe, ports 30306, and 8548.
 
 ## [PORT ASSUMPTIONS \ DEFAULT CONFIG] :phone:
 
