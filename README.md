@@ -4,7 +4,7 @@
 
 Step 1> Download scripts via .zip, .exe release, or git clone.  \
 Step 2> **IMPORTANT** Rename first folder to Walton-GPU-641 and *walton.exe* to *walton1.exe*, further described below.  \
-Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 *if you downloaded .exe just run it now* \
+Step 3> Configure $NUM_GPU and $NUM_CPU inside of wtc.au3 **If you downloaded .exe just run it now, no edits required** \
 Step 4> Enter your pubkey information into $etherbase at the top of wtc.au3, OR use .json files, more on this below. \
 Step 5> Optionally compile as x86 (suggested), and run. \
 
