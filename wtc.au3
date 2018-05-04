@@ -19,13 +19,13 @@ Global Const $ETHERBASE = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf
 ;Directly above is where to set your public wallet address.  --
 ;If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.
 ;Instead it would use the address of the .json keystore file.
-Global Const $NUM_GPUS = 1                      ;set the number of gpu's
-Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
+Global Const $NUM_GPUS = 3                      ;set the number of gpu's
+Global Const $NUM_CPUS = 1                      ;set the number of cpu's -- currently can only be 0 or 1
 Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
 ;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
-Global $MINER_THREADS = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable.
+Global $MINER_THREADS = ' --minerthreads=3' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable.
 ; https://steemit.com/waltonchain/@slackerjack/mining-waltonchain-mainnet-with-cpu-via-cli  TODO: Include CPU Affinity Logic to Program
 ;----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'  ;directory we'
 Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of the log file we create.
 Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"  ; MING MING MING!
 Global $keystorejson_path = $working_dir & "node1\keystores\"
-Global $gpupowORminerthreads = ' --gpupow'    ;tells walton.exe if it is cpu or gpu, if gpu isn't active this is set to $MINER_THREADS
+Global $gpuOrCpu = ' --gpupow'    ;tells walton.exe if it is cpu or gpu, if gpu isn't active this is set to $MINER_THREADS
 Global $peerPort = " 30303"     ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
 Global $rpcPort = " 8545"       ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
 Global $maxPeers = "50"         ;Adjust the amount of maximum peers you can have per miner.
@@ -68,19 +68,19 @@ EndFunc;==>_Main()
 
 Func _runCMDS()
     For $thisRun = 0 to $lastRun
-          
+
           If _WinAPI_PathIsDirectory($working_dir) = 0 Then
                MsgBox(0,"","Check your directory structure " & $working_dir & " does not exist")
                Exit(0)
           EndIf
           If $NUM_CPUS = 1 Then
                If $thisRun = $lastRun Then
-                    $gpupowORminerthreads = $MINER_THREADS                    
+                    $gpuOrCpu = $MINER_THREADS
                EndIf
-          EndIf          
+          EndIf
           If not _WinAPI_PathIsDirectory($working_dir & "node1\") Then
                Run(@ComSpec & ' /c walton' & $gpu_path & " --datadir node1 init genesis.json",$working_dir)
-          EndIf          
+          EndIf
           If _WinAPI_PathIsDirectory($keystorejson_path) = True Then
                If _WinAPI_PathIsDirectoryEmpty($keystorejson_path) = False Then
                     $ETHERBASEHolder = ""
@@ -90,7 +90,7 @@ Func _runCMDS()
           Global $runCMD = @COMSPEC _
           & ' /k walton' & $gpu_path _
           & $ETHERBASEHolder _
-          & $gpupowORminerthreads _
+          & $gpuOrCpu _
           & ' --port ' & $peerPort _
           & ' --rpcport ' & $rpcPort & ' console' _
           & ' --maxpeers ' & $maxPeers _
@@ -104,16 +104,16 @@ Func _runCMDS()
           & ' --mine'
 
           If $NUM_CPUS = 0 Then
-               $pids[$thisRun][0] = Run($ming_path)                
-               ProcessWait($pids[$thisRun][0])          
-          ElseIf $thisRun <> $lastRun  Then               
                $pids[$thisRun][0] = Run($ming_path)
                ProcessWait($pids[$thisRun][0])
-          EndIf      
-          $gpupowORminerthreads = ' --gpupow'
+          ElseIf $thisRun <> $lastRun  Then
+               $pids[$thisRun][0] = Run($ming_path)
+               ProcessWait($pids[$thisRun][0])
+          EndIf
+          $gpuOrCpu = ' --gpupow'
           $ETHERBASEHolder = $ETHERBASE
 
-          $pids[$thisRun][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)         
+          $pids[$thisRun][1] = Run($runCMD,$working_dir,$SHOW_WINDOW)
           ProcessWait($pids[$thisRun][1])
           If Not $lastRun = 0 Then
                $peerPort += 1
@@ -131,7 +131,7 @@ Func _runCMDS()
           $gpu_path = "1"
           $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
           $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
-          $keystorejson_path = $working_dir & "node1\keystores\"          
+          $keystorejson_path = $working_dir & "node1\keystores\"
      EndIf
 EndFunc ;==>_runCmds()
 

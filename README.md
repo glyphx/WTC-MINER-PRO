@@ -46,7 +46,7 @@ C:\  \
 │       │                   └── keystore.json **OPTIONAL, you can choose to include the etherbase information at the top of the script** \
 │       ├ **This miner uses ports 30303 and 8545**  \
 │       └── walton0.exe \
-└── Walton-GPU-642 \
+└── Walton-GPU-641 \
          ├── genesis.json  \
          ├── GPUMing_v0.2 \
          │        ├── cudart32_80.dll  \
