@@ -18,8 +18,8 @@ Global $etherbase = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"'
 ;Directly above is where to set your public wallet address.  --
 ;If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.
 ;Instead it would use the address of the .json keystore file.
-Global Const $NUM_GPUS = 2                      ;set the number of gpu's
-Global Const $NUM_CPUS = 1                      ;set the number of cpu's -- currently can only be 0 or 1
+Global Const $NUM_GPUS = 1                      ;set the number of gpu's
+Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
 Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
 ;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
