@@ -13,39 +13,49 @@
 
 _SingleScript() ;prevents more than one instance from running so long as they share the same name, the newer instance overwrites the old.
 
-;------------------------------------CORE USER OPTIONS ----------------------------------------------------------------------------------
+;------------------------------------[CORE USER OPTIONS]---------------------------------------------------------------------------------
+
 Global Const $ETHERBASE = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf5ee"' ;aka pubkey, aka wallet address
 ;Directly above is where to set your public wallet address.  --
 ;If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.
 ;Instead it would use the address of the .json keystore file.
 Global Const $NUM_GPUS = 1                      ;set the number of gpu's
 Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
-Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
+Global Const $LOOP_SIZE_IN_MIN = 1            ;change the time of the main loop here.
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
 ;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
 Global $MINER_THREADS = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable.
 ; https://steemit.com/waltonchain/@slackerjack/mining-waltonchain-mainnet-with-cpu-via-cli  TODO: Include CPU Affinity Logic to Program
-;----------------------------------------------------------------------------------------------------------------------------------------
 
-;--------------------------------------PATH OPTIONS--------------------------------------------------------------------------------------
+
+;------------------------------------[PATH OPTIONS]--------------------------------------------------------------------------------------
+
 Global Const $ROOT_DIR = "C:\"                  ;path to folder containing all copies of $FOLDER_NAME
 Global Const $FOLDER_NAME = "WALTON-GPU-64"     ;name of folder(s) inside $ROOT_DIR containing walton.exe
 Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder(s) inside $FOLDER_NAME that contains ming_run.exe
-Global $gpu_path = '0' ;how miner files are differentiated, don't touch this unless you trace the code to see how it works
-;---------------------------------------------------------------------------------------------------------------------------------------
+
+;------------------------------------[NETWORK OPTIONS]-----------------------------------------------------------------------------------
+
+Global $peerPort = " 30303"     ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
+Global $rpcPort = " 8545"       ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
+Global $maxPeers = "50"         ;Adjust the amount of maximum peers you can have per miner.
+
+;------------------------------------[MISC]----------------------------------------------------------------------------------------------
+
 Global Const $lastRun = $NUM_CPUS + $NUM_GPUS - 1
+Global $gpu_path = '0' ;how miner files are differentiated, don't touch this unless you trace the code to see how it works
 Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'  ;directory we're currently in
 Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of the log file we create.
 Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"  ; MING MING MING!
 Global $keystorejson_path = $working_dir & "node1\keystores\"
 Global $gpuOrCpu = ' --gpupow'    ;tells walton.exe if it is cpu or gpu, if gpu isn't active this is set to $MINER_THREADS
-Global $peerPort = " 30303"     ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
-Global $rpcPort = " 8545"       ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
-Global $maxPeers = "50"         ;Adjust the amount of maximum peers you can have per miner.
 Global $pids[$NUM_GPUS+$NUM_CPUS][2]      ;array that stores the process id's of all the walton / mings
 Global $ETHERBASEHolder = $ETHERBASE ; temp holder for etherbase address in case situations are different between miners
 Global $runNonKillProcs = 0
+
+
+;----------------------------------------------------------------------------------------------------------------------------------------
 
 _Main() ;HERE WE GOOOOOOO!
 
@@ -65,11 +75,13 @@ Func _Main()
      WEnd
 EndFunc;==>_Main()
 
+;open waltonX.exe and ming_run.exe (not for cpu) with the correct switches, look for json, if not found use etherbase.
 Func _runCMDS()
     For $thisRun = 0 to $lastRun
 
           If _WinAPI_PathIsDirectory($working_dir) = 0 Then
-               MsgBox(0,"","Check your directory structure " & $working_dir & " does not exist")
+               MsgBox(0,"","Check your directory structure " & $working_dir & " does not exist." & @CRLF
+                & "Refer to the readme for more information on directory structure.")
                Exit(0)
           EndIf
           If $NUM_CPUS = 1 Then
@@ -127,7 +139,7 @@ Func _runCMDS()
      If $lastRun > 0 Then
           $peerPort = "30303"
           $rpcPort = "8545"
-          $gpu_path = "1"
+          $gpu_path = "0"
           $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
           $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
           $keystorejson_path = $working_dir & "node1\keystores\"
@@ -160,7 +172,7 @@ EndFunc;==>_timedEscape()
 ;open a file, grab handle to console buffer of walton.exe, print to file.
 Func _ConsoleToFile()
     For $thisRun = 0 to $lastRun
-          $log_path = $ROOT_DIR & $FOLDER_NAME & $thisRun + 1 & "\log.txt"
+          $log_path = $ROOT_DIR & $FOLDER_NAME & $thisRun & "\log.txt"
           $hFileOpen = FileOpen($log_path, $FO_APPEND)
           FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
           $vhandle = _cmdAttachConsole($pids[$thisRun][1]) ; attach to console and get handle to buffer
