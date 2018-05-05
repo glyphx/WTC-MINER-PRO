@@ -1,6 +1,5 @@
 ;@Author : glyph
 ;@License : MIT, A copy should have been included in your copy of the software. If not, you can get one at: https://opensource.org/licenses/MIT
-;TOMORROW - START COUNT FROM 0, MAKE CPU LAST
 #include <Array.au3>
 #include <AutoItConstants.au3>
 #include <CmdA.au3>
@@ -20,7 +19,7 @@ Global Const $ETHERBASE = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf
 ;If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.
 ;Instead it would use the address of the .json keystore file.
 Global Const $NUM_GPUS = 1                      ;set the number of gpu's
-Global Const $NUM_CPUS = 1                      ;set the number of cpu's -- currently can only be 0 or 1
+Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
 Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
 ;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
@@ -54,7 +53,7 @@ Func _Main()
      While 1
           If $KILL_PROCS = 1 Then
                _runCMDS()
-          ElseIf $KILL_PROCS = 0 & $runNonKillProcs = 0 Then
+          ElseIf $KILL_PROCS = 0 And $runNonKillProcs = 0 Then
                _runCMDS()
                $runNonKillProcs = 1
           EndIf
@@ -181,14 +180,11 @@ Func _closeProcesses() ;rewrite to be more generic so it can be started before m
           While ProcessExists('walton' & $thisRun & '.exe')
                 ProcessClose('walton' & $thisRun & '.exe')
           WEnd
-
           while ProcessExists($pids[$thisRun][1])
                 ProcessClose($pids[$thisRun][1])
           WEnd
-         
-            while ProcessExists($pids[$thisRun][0])
+          while ProcessExists($pids[$thisRun][0])
                   ProcessClose($pids[$thisRun][0])
-            WEnd
-        
+          WEnd
      Next
 EndFunc;==>_closeProcesses()

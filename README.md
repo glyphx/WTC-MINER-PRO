@@ -74,7 +74,7 @@ If you want to use CPU, set $NUM_CPU's to 1 in the top of wtc.au3.  \
 $NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)  \
 If using CPU it will be run on the last miner file you include, that file doens't need ming_run.exe. 
 
-## [EXAMPLE MULTI-GPU AND CPU SETUP] :computer: :vhs: :vhs: :vhs: :vhs:
+## [EXAMPLE MULTI-GPU AND CPU SETUP] :computer: :vhs: :vhs: :vhs: 
 
 $NUM_GPU = 3 \
 $NUM_CPU = 1 \
