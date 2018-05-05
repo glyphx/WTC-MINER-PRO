@@ -13,7 +13,7 @@ Step 5> Optionally compile as x86 (suggested), and run.
 For the fastest execution Autoit can be compiled as an .exe, but if autoit is installed it can also be run as a script by double-clicking wtc.au3.
 Feel free to download an .exe in the release section or compile/run it yourself. \
 It's easy to compile Autoit, simply right click the wtc.au3 script after installing autoit and select compile (x86), an .exe will be generated.
-The .exe's autoit generates are stand alone and do not require autoit to be installed to use. \
+The .exe's autoit generates are stand alone and do not require autoit to be installed to use. 
 
 https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - **Direct Download Autoit 32/64**
 
@@ -22,7 +22,7 @@ https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - **
 You have a directory structure of: \
 C:\Walton-GPU-640  *Miner0* \
 C:\Walton-GPU-641  *Miner1* \
-C:\Walton-GPU-642  *Miner2* 
+C:\Walton-GPU-642  *Miner2*
 
 ## [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 
@@ -51,7 +51,7 @@ C:\  \
          ├── GPUMing_v0.2 \
          │        ├── cudart32_80.dll  \
          │        ├── cudart64_80.dll  \
-         │        ├── ming_run.exe **If using CPU this file will not be run, if not using CPU this file should exist & point to GPU1.**
+         │        ├── ming_run.exe **If using CPU this file will not be run, if not using CPU this file should exist & point to GPU1.** \
          │        ├── ming_run.iobj  \
          │        ├── ming_run.ipdb \
          │        └── ming_run.pdb  \
@@ -69,9 +69,9 @@ It should correspond with the number of instances on GPU's you would like to run
 $NUM_GPU Default Configuration: 1
 
 **IMPORTANT** To use MultiGPU you had to have modified the .exe's with a hexeditor.
-I can teach you how to disassemble the .exe's: @glyphx on telegram or glyph.miser@gmail.com.
-**Warning**
-**Do not run other people's modified .exe's, you are implicitly giving them your trust.**
+I can teach you how to disassemble the .exe's: @glyphx on telegram or glyph.miser@gmail.com. \
+**Warning** \
+**Do not run other people's modified .exe's, you are implicitly giving them your trust.** 
 
 ## [CPU] :computer:
 
