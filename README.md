@@ -20,9 +20,9 @@ https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - **
 ## [DIRECTORY STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 
 You have a directory structure of: \
-C:\Walton-GPU-640 \
-C:\Walton-GPU-641 \
-C:\Walton-GPU-642
+C:\Walton-GPU-640  *Miner0* \
+C:\Walton-GPU-641  *Miner1* \
+C:\Walton-GPU-642  *Miner2* \
 
 ## [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 
@@ -68,16 +68,21 @@ Set $NUM_GPUS at the top of wtc.au3 \
 It should correspond with the number of instances on GPU's you would like to run \
 $NUM_GPU Default Configuration: 1
 
-**IMPORTANT** To use MultiGPU you had ot have modified the .exe's with a hexeditor or the like.
-I can teach you how to disassemble the .exe's,  @glyphx on telegram or glyph.miser@gmail.com.
-
-
+**IMPORTANT** To use MultiGPU you had to have modified the .exe's with a hexeditor.
+I will not redistribute the modified .exe's to you. However, I can teach you how
+to disassemble the .exe's: @glyphx on telegram or glyph.miser@gmail.com.
+**Warning**
+**Do not run other people's modified .exe's, you are implicitly giving them your trust.**
 
 ## [CPU] :computer:
 
 If you want to use CPU, set $NUM_CPU's to 1 in the top of wtc.au3.  \
 $NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)  \
 If using CPU it will be run on the last miner file you include, that file doens't need ming_run.exe.
+
+## [GPU+CPU] :computer: :vhs:
+
+You can use CPU+GPU without modified .exe's. 
 
 ## [EXAMPLE MULTI-GPU AND CPU SETUP] :computer: :vhs: :vhs: :vhs: 
 
