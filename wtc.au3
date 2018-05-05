@@ -21,7 +21,7 @@ Global Const $ETHERBASE = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf
 ;Instead it would use the address of the .json keystore file.
 Global Const $NUM_GPUS = 1                      ;set the number of gpu's
 Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
-Global Const $LOOP_SIZE_IN_MIN = 1            ;change the time of the main loop here.
+Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
 ;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
@@ -165,7 +165,7 @@ Func _timedEscape()
                     $pressed = 0
                EndIf
           EndIf
-     Sleep(250)
+     Sleep(500)
     WEnd
 EndFunc;==>_timedEscape()
 
@@ -177,7 +177,7 @@ Func _ConsoleToFile()
           FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
           $vhandle = _cmdAttachConsole($pids[$thisRun][1]) ; attach to console and get handle to buffer
           $output = _CmdGetText($vhandle) ; kernel call to grab the text from the buffer
-          FreeConsole() ;detatch from the console
+          FreeConsole() ;detatch from the console          
           FileWrite($hFileOpen, $output & @CRLF)
           FileWrite($hFileOpen, _NowDate() & " " & _NowTime() & @CRLF)
           FileClose($hfileOpen)
