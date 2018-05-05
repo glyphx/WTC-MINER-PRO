@@ -22,7 +22,7 @@ https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe - **
 You have a directory structure of: \
 C:\Walton-GPU-640  *Miner0* \
 C:\Walton-GPU-641  *Miner1* \
-C:\Walton-GPU-642  *Miner2* \
+C:\Walton-GPU-642  *Miner2* 
 
 ## [FILE STRUCTURE ASSUMPTIONS \ DEFAULT CONFIG] :file_folder:
 
@@ -69,8 +69,7 @@ It should correspond with the number of instances on GPU's you would like to run
 $NUM_GPU Default Configuration: 1
 
 **IMPORTANT** To use MultiGPU you had to have modified the .exe's with a hexeditor.
-I will not redistribute the modified .exe's to you. However, I can teach you how
-to disassemble the .exe's: @glyphx on telegram or glyph.miser@gmail.com.
+I can teach you how to disassemble the .exe's: @glyphx on telegram or glyph.miser@gmail.com.
 **Warning**
 **Do not run other people's modified .exe's, you are implicitly giving them your trust.**
 
