@@ -68,11 +68,16 @@ Set $NUM_GPUS at the top of wtc.au3 \
 It should correspond with the number of instances on GPU's you would like to run \
 $NUM_GPU Default Configuration: 1
 
+**IMPORTANT** To use MultiGPU you had ot have modified the .exe's with a hexeditor or the like.
+I can teach you how to disassemble the .exe's,  @glyphx on telegram or glyph.miser@gmail.com.
+
+
+
 ## [CPU] :computer:
 
 If you want to use CPU, set $NUM_CPU's to 1 in the top of wtc.au3.  \
 $NUM_CPU Default Configuration: 0 (Currently can only be 1 or 0)  \
-If using CPU it will be run on the last miner file you include, that file doens't need ming_run.exe. 
+If using CPU it will be run on the last miner file you include, that file doens't need ming_run.exe.
 
 ## [EXAMPLE MULTI-GPU AND CPU SETUP] :computer: :vhs: :vhs: :vhs: 
 
@@ -107,5 +112,6 @@ Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew eve
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
 Global Const $MINER_THREADS = ' --minerthreads=8' ;only affects CPU mining, the more your crush your cpu, more likely gpus get unstable.
 ```
+
 
 0.6 Goals: Better user interface.
