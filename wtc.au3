@@ -49,7 +49,7 @@ Global $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'  ;directory we'
 Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of the log file we create.
 Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"  ; MING MING MING!
 Global $keystorejson_path = $working_dir & "node1\keystores\"
-Global $extraData = '"https://tinyurl.com/wtcminerpro' & $gpu_path & '"'
+Global $extraData = '"https://tinyurl.com/wtcminerpro' & ($gpu_path + $offset) & '"'
 Global $offset = 0
 Global $gpuOrCpu = ' --gpupow'    ;tells walton.exe if it is cpu or gpu, if gpu isn't active this is set to $MINER_THREADS
 Global $pids[$NUM_GPUS+$NUM_CPUS][2]      ;array that stores the process id's of all the walton / mings
