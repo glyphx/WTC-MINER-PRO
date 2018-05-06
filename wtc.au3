@@ -136,7 +136,7 @@ Func _runCMDS()
                $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
                $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
                $keystorejson_path = $working_dir & "node1\keystores\"
-               $extraData = '"https://tinyurl.com/wtcminerpro' & ($gpu_path + $offset) & '"'
+               $extraData = '"https://tinyurl.com/wtcminer' & ($gpu_path + $offset) & '"'
           EndIf
      Next
      ;Reset things back to their initial values to through go the loop again
@@ -147,7 +147,7 @@ Func _runCMDS()
           $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
           $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
           $keystorejson_path = $working_dir & "node1\keystores\"
-          $extraData = '"https://tinyurl.com/wtcminerpro' & ($gpu_path + $offset) & '"'
+          $extraData = '"https://tinyurl.com/wtcminer' & ($gpu_path + $offset) & '"'
      EndIf
 EndFunc ;==>_runCmds()
 
