@@ -50,7 +50,7 @@ Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of t
 Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"  ; MING MING MING!
 Global $keystorejson_path = $working_dir & "node1\keystores\"
 Global $offset = 0
-Global $extraData = '"https://tinyurl.com/wtcminerpro' & ($gpu_path + $offset) & '"'
+Global $extraData = '"https://tinyurl.com/wtcminer' & ($gpu_path + $offset) & '"'
 Global $gpuOrCpu = ' --gpupow'    ;tells walton.exe if it is cpu or gpu, if gpu isn't active this is set to $MINER_THREADS
 Global $pids[$NUM_GPUS+$NUM_CPUS][2]      ;array that stores the process id's of all the walton / mings
 Global $ETHERBASEHolder = $ETHERBASE ; temp holder for etherbase address in case situations are different between miners
