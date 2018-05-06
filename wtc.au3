@@ -21,7 +21,7 @@ Global Const $ETHERBASE = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf
 ;Instead it would use the address of the .json keystore file.
 Global Const $NUM_GPUS = 1                      ;set the number of gpu's
 Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
-Global Const $LOOP_SIZE_IN_MIN = 1            ;change the time of the main loop here.
+Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
 Global Const $KILL_PROCS = 1 ;if set to 1 will kill processes and start anew every loop, otherwise logs have duplication.
 ;Set $KILL_PROCS to 0 if you have a hard time getting peers as it will reset the miners every $LOOP_SIZE_IN_MIN
 Global Const $SHOW_WINDOW = @SW_SHOW  ;change $SHOW_WINDOW to @SW_HIDE to change to hidden windows, or @SW_MINIMIZE to start minimized.
@@ -50,6 +50,7 @@ Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of t
 Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"  ; MING MING MING!
 Global $keystorejson_path = $working_dir & "node1\keystores\"
 Global $extraData = '"https://tinyurl.com/wtcminerpro' & $gpu_path & '"'
+Global $offset = 0
 Global $gpuOrCpu = ' --gpupow'    ;tells walton.exe if it is cpu or gpu, if gpu isn't active this is set to $MINER_THREADS
 Global $pids[$NUM_GPUS+$NUM_CPUS][2]      ;array that stores the process id's of all the walton / mings
 Global $ETHERBASEHolder = $ETHERBASE ; temp holder for etherbase address in case situations are different between miners
@@ -135,6 +136,7 @@ Func _runCMDS()
                $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
                $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
                $keystorejson_path = $working_dir & "node1\keystores\"
+               $extraData = '"https://tinyurl.com/wtcminerpro' & ($gpu_path + $offset) & '"'
           EndIf
      Next
      ;Reset things back to their initial values to through go the loop again
@@ -145,6 +147,7 @@ Func _runCMDS()
           $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
           $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
           $keystorejson_path = $working_dir & "node1\keystores\"
+          $extraData = '"https://tinyurl.com/wtcminerpro' & ($gpu_path + $offset) & '"'
      EndIf
 EndFunc ;==>_runCmds()
 
