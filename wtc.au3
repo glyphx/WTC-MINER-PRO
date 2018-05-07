@@ -50,7 +50,8 @@ Global $log_path = $working_dir & "log.txt" ;yep, you got it, it's the path of t
 Global $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"  ; MING MING MING!
 Global $keystorejson_path = $working_dir & "node1\keystores\"
 Global $offset = 0
-Global $extraData = '"https://tinyurl.com/wtcminer' & ($gpu_path + $offset) & '"'
+Global $extraDataString = '"https://tinyurl.com/wtcminer'
+Global $extraData = $extraDataString & ($gpu_path + $offset) & '"'
 Global $gpuOrCpu = ' --gpupow'    ;tells walton.exe if it is cpu or gpu, if gpu isn't active this is set to $MINER_THREADS
 Global $pids[$NUM_GPUS+$NUM_CPUS][2]      ;array that stores the process id's of all the walton / mings
 Global $ETHERBASEHolder = $ETHERBASE ; temp holder for etherbase address in case situations are different between miners
@@ -136,7 +137,7 @@ Func _runCMDS()
                $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
                $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
                $keystorejson_path = $working_dir & "node1\keystores\"
-               $extraData = '"https://tinyurl.com/wtcminer' & ($gpu_path + $offset) & '"'
+               $extraData = $extraDataString & ($gpu_path + $offset) & '"'
           EndIf
      Next
      ;Reset things back to their initial values to through go the loop again
@@ -147,7 +148,7 @@ Func _runCMDS()
           $working_dir = $ROOT_DIR & $FOLDER_NAME & $gpu_path & '\'
           $ming_path = $working_dir & $MING_FOLDER_NAME & "\ming_run.exe"
           $keystorejson_path = $working_dir & "node1\keystores\"
-          $extraData = '"https://tinyurl.com/wtcminer' & ($gpu_path + $offset) & '"'
+          $extraData = $extraDataString & ($gpu_path + $offset) & '"'
      EndIf
 EndFunc ;==>_runCmds()
 
