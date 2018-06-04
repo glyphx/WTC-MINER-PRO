@@ -19,6 +19,7 @@ Global Const $ETHERBASE = ' --etherbase "0xf3faf814cd115ebba078085a3331774b762cf
 ;Directly above is where to set your public wallet address.  --
 ;If you have ANY FILE inside of C:\Walton-GPU-64x\node1\keystores\ this etherbase setting won't be used.
 ;Instead it would use the address of the .json keystore file.
+Global Const $EXTRA_DATA = ' --extradata "thanks-glyph"'       ; used for GMN
 Global Const $NUM_GPUS = 1                      ;set the number of gpu's
 Global Const $NUM_CPUS = 0                      ;set the number of cpu's -- currently can only be 0 or 1
 Global Const $LOOP_SIZE_IN_MIN = 120            ;change the time of the main loop here.
@@ -39,7 +40,7 @@ Global Const $MING_FOLDER_NAME = "GPUMing_v0.2" ;name of folder(s) inside $FOLDE
 
 Global $peerPort = " 30303"     ;Start first miner on 30303 and add +1 for each additional miner, eg. miner 2 would be 30304
 Global $rpcPort = " 8545"       ;Start first miner rpc on 8545, miner 2: 8546, miner 3: 8547 etc
-Global $maxPeers = "50"         ;Adjust the amount of maximum peers you can have per miner.
+Global $maxPeers = "20"         ;Adjust the amount of maximum peers you can have per miner.
 
 ;------------------------------------[MISC]----------------------------------------------------------------------------------------------
 
@@ -101,6 +102,7 @@ Func _runCMDS()
           Global $runCMD = @COMSPEC _
           & ' /k walton' & $gpu_path _
           & $ETHERBASEHolder _
+          & $EXTRA_DATA _
           & $gpuOrCpu _
           & ' --port ' & $peerPort _
           & ' --rpcport ' & $rpcPort & ' console' _
